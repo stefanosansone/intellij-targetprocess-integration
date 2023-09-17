@@ -1,0 +1,9 @@
+{
+  "icons": {
+    "expui": {
+      "toolwindow": {
+        "targetprocess.svg": "icons/toolWindowTargetProcess.svg"
+      }
+    }
+  }
+}

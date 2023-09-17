@@ -1,15 +1,20 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <id>com.github.stefanosansone.intellijtargetprocessintegration</id>
-    <name>intellij-targetprocess-integration Template</name>
-    <vendor>stefanosansone</vendor>
+    <name>TargetProcess Integration</name>
+    <vendor>Stefano Sansone</vendor>
 
     <depends>com.intellij.modules.platform</depends>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.stefanosansone.intellijtargetprocessintegration.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
+        <iconMapper mappingFile="TargetProcessIconMappings.json"/>
+        <toolWindow
+                factoryClass="com.github.stefanosansone.intellijtargetprocessintegration.toolWindow.TargetProcessToolWindowFactory"
+                id="TargetProcess"
+                icon="com.github.stefanosansone.intellijtargetprocessintegration.icons.TargetProcessIcons.TargetProcessToolWindow"
+        />
     </extensions>
 
     <applicationListeners>
