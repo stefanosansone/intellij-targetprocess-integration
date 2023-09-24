@@ -3,16 +3,15 @@ package com.github.stefanosansone.intellijtargetprocessintegration.dialogs
 import com.github.stefanosansone.intellijtargetprocessintegration.dialogs.ui.integrationSettingsUi
 import com.intellij.openapi.ui.DialogWrapper
 import java.awt.BorderLayout
-import java.awt.Dimension
 import javax.swing.JComponent
-import javax.swing.JLabel
 import javax.swing.JPanel
 
 
 class SettingsDialogWrapper : DialogWrapper(true) {
     init {
         title = "TargetProcess Settings"
-        setSize(750,400)
+        isResizable = false
+        setSize(750,300)
         init()
     }
 
