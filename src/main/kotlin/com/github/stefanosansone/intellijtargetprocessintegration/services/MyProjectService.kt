@@ -1,9 +1,10 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.services
 
+import com.github.stefanosansone.intellijtargetprocessintegration.MyBundle
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
-import com.github.stefanosansone.intellijtargetprocessintegration.MyBundle
+
 
 @Service(Service.Level.PROJECT)
 class MyProjectService(project: Project) {
@@ -14,4 +15,5 @@ class MyProjectService(project: Project) {
     }
 
     fun getRandomNumber() = (1..100).random()
+
 }
