@@ -4,8 +4,9 @@ import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.dsl.builder.AlignX
 import com.intellij.ui.dsl.builder.BottomGap
 import com.intellij.ui.dsl.builder.panel
+import com.intellij.ui.dsl.builder.text
 
-fun integrationSettingsUi(): DialogPanel {
+fun integrationSettingsUi(token: String): DialogPanel {
     return panel {
         group("TargetProcess Access Token Setup") {
             row {
@@ -22,6 +23,7 @@ fun integrationSettingsUi(): DialogPanel {
             panel {
                 row("Existing TargetProcess Access Token:") {
                     passwordField()
+                        .text(token)
                         .align(AlignX.FILL)
                         .enabled(false)
                         .applyToComponent { text = "test" }

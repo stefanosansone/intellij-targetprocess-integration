@@ -1,6 +1,9 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.dialogs
 
 import com.github.stefanosansone.intellijtargetprocessintegration.dialogs.ui.integrationSettingsUi
+import com.github.stefanosansone.intellijtargetprocessintegration.util.TP_TOKEN_STORE
+import com.github.stefanosansone.intellijtargetprocessintegration.util.createCredentialAttributes
+import com.intellij.ide.passwordSafe.PasswordSafe
 import com.intellij.openapi.ui.DialogWrapper
 import java.awt.BorderLayout
 import javax.swing.JComponent
@@ -17,9 +20,13 @@ class SettingsDialogWrapper : DialogWrapper(true) {
 
     override fun createCenterPanel(): JComponent {
         val dialogPanel = JPanel(BorderLayout())
+        val credentialAttributes = createCredentialAttributes(TP_TOKEN_STORE)
+        val token = PasswordSafe.instance.getPassword(credentialAttributes)
+
         dialogPanel.add(
-            integrationSettingsUi()
+            integrationSettingsUi(token)
         )
         return dialogPanel
     }
+
 }
