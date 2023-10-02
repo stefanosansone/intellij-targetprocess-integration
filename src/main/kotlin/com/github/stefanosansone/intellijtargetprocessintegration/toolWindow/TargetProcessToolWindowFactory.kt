@@ -9,7 +9,8 @@ import com.intellij.ui.components.JBLabel
 import com.intellij.ui.components.JBPanel
 import com.intellij.ui.content.ContentFactory
 import com.github.stefanosansone.intellijtargetprocessintegration.MyBundle
-import com.github.stefanosansone.intellijtargetprocessintegration.services.MyProjectService
+import com.github.stefanosansone.intellijtargetprocessintegration.configuration.PluginSettingsState
+import com.github.stefanosansone.intellijtargetprocessintegration.services.TargetProcessIntegrationService
 import javax.swing.JButton
 
 
@@ -29,7 +30,7 @@ class TargetProcessToolWindowFactory : ToolWindowFactory {
 
     class TargetProcessToolWindow(toolWindow: ToolWindow) {
 
-        private val service = toolWindow.project.service<MyProjectService>()
+        private val service = toolWindow.project.service<TargetProcessIntegrationService>()
 
         fun getContent() = JBPanel<JBPanel<*>>().apply {
             val label = JBLabel(MyBundle.message("randomLabel", "?"))
@@ -37,7 +38,7 @@ class TargetProcessToolWindowFactory : ToolWindowFactory {
             add(label)
             add(JButton(MyBundle.message("shuffle")).apply {
                 addActionListener {
-                    label.text = MyBundle.message("randomLabel", service.getRandomNumber())
+                    label.text = MyBundle.message("randomLabel", PluginSettingsState.instance.state.targetProcessAccessToken)
                 }
             })
         }

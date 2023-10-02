@@ -8,7 +8,11 @@
 
     <resource-bundle>messages.MyBundle</resource-bundle>
 
+
     <extensions defaultExtensionNs="com.intellij">
+
+        <applicationService serviceImplementation="com.github.stefanosansone.intellijtargetprocessintegration.configuration.PluginSettingsState"/>
+
         <iconMapper mappingFile="TargetProcessIconMappings.json"/>
         <toolWindow
                 factoryClass="com.github.stefanosansone.intellijtargetprocessintegration.toolWindow.TargetProcessToolWindowFactory"

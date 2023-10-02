@@ -1,12 +1,10 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.dialogs.ui
 
+import com.github.stefanosansone.intellijtargetprocessintegration.dialogs.SettingsDialogWrapper
 import com.intellij.openapi.ui.DialogPanel
-import com.intellij.ui.dsl.builder.AlignX
-import com.intellij.ui.dsl.builder.BottomGap
-import com.intellij.ui.dsl.builder.panel
-import com.intellij.ui.dsl.builder.text
+import com.intellij.ui.dsl.builder.*
 
-fun integrationSettingsUi(token: String): DialogPanel {
+fun settingsPanelUi(existingToken: String, settingsModel: SettingsDialogWrapper.SettingsModel): DialogPanel {
     return panel {
         group("TargetProcess Access Token Setup") {
             row {
@@ -23,15 +21,15 @@ fun integrationSettingsUi(token: String): DialogPanel {
             panel {
                 row("Existing TargetProcess Access Token:") {
                     passwordField()
-                        .text(token)
+                        .text(existingToken)
                         .align(AlignX.FILL)
                         .enabled(false)
-                        .applyToComponent { text = "test" }
                 }
             }
             panel {
                 row("New TargetProcess Access Token:") {
                     textField()
+                        .bindText(settingsModel::token)
                         .align(AlignX.FILL)
                         .comment("<font color=\"#DFE1E5\"><i>Note: this token will be stored securely on your local computer</i></font>")
                 }
