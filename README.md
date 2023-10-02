@@ -8,7 +8,9 @@
 > This project is in its early stages of development and is considered experimental. Please be aware that it may contain bugs and undergo frequent changes. If you wish to test it, we recommend generating a dedicated TargetProcess Access Token specifically for use with this plugin.
 
 ## Overview
+<!-- Plugin description -->
 This plugin integrates TargetProcess into your JetBrains IDE, enabling you to view tasks and track activities without having to leave your development environment.
+<!-- Plugin description end -->
 
 ## Installation
 
