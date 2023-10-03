@@ -3,6 +3,7 @@ package com.github.stefanosansone.intellijtargetprocessintegration.dialogs
 import com.github.stefanosansone.intellijtargetprocessintegration.configuration.PluginSettingsState
 import com.github.stefanosansone.intellijtargetprocessintegration.dialogs.ui.settingsPanelUi
 import com.github.stefanosansone.intellijtargetprocessintegration.util.EMPTY_STRING
+import com.github.stefanosansone.intellijtargetprocessintegration.util.isAccessTokenValid
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
 import org.jetbrains.annotations.ApiStatus

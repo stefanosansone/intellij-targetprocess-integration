@@ -4,7 +4,10 @@ import com.github.stefanosansone.intellijtargetprocessintegration.dialogs.Settin
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.dsl.builder.*
 
-fun settingsPanelUi(existingToken: String, settingsModel: SettingsDialogWrapper.SettingsModel): DialogPanel {
+fun settingsPanelUi(
+    existingToken: String,
+    settingsModel: SettingsDialogWrapper.SettingsModel
+): DialogPanel {
     return panel {
         group("TargetProcess Access Token Setup") {
             row {
