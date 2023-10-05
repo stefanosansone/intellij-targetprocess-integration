@@ -1,6 +1,7 @@
 [versions]
 # libraries
 annotations = "24.0.1"
+okhttp = "4.11.0"
 
 # plugins
 kotlin = "1.9.10"
@@ -11,6 +12,9 @@ kover = "0.7.3"
 
 [libraries]
 annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
+okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttp" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp" }
+okhttp-logginginterceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
 
 [plugins]
 changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
