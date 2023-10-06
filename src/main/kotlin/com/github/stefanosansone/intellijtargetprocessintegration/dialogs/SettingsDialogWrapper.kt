@@ -1,23 +1,20 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.dialogs
 
-import com.github.stefanosansone.intellijtargetprocessintegration.configuration.PluginSettingsState
-import com.github.stefanosansone.intellijtargetprocessintegration.dialogs.ui.settingsPanelUi
+import com.github.stefanosansone.intellijtargetprocessintegration.settings.TargetProcessSettingsState
+import com.github.stefanosansone.intellijtargetprocessintegration.settings.ui.settingsPanelUi
 import com.github.stefanosansone.intellijtargetprocessintegration.util.EMPTY_STRING
-import com.github.stefanosansone.intellijtargetprocessintegration.util.isAccessTokenValid
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.ValidationInfo
 import org.jetbrains.annotations.ApiStatus
-import java.awt.BorderLayout
-import javax.swing.JComponent
-import javax.swing.JPanel
 
 
 class SettingsDialogWrapper : DialogWrapper(true) {
 
     val settingsModel = SettingsModel()
 
-    private var existingAccessToken = PluginSettingsState.instance.state.targetProcessAccessToken
-    private val panel = settingsPanelUi(existingAccessToken, settingsModel)
+    private var existingAccessToken = TargetProcessSettingsState.instance.state.targetProcessAccessToken
+    private var existingHostname = TargetProcessSettingsState.instance.state.targetProcessHostname
+    //private val panel = settingsPanelUi(existingAccessToken, existingHostname, settingsModel)
 
     init {
         title = "TargetProcess Settings"
@@ -26,23 +23,23 @@ class SettingsDialogWrapper : DialogWrapper(true) {
         init()
     }
 
-    override fun createCenterPanel(): JComponent {
-        val dialogPanel = JPanel(BorderLayout())
-        dialogPanel.add(panel)
-        return dialogPanel
-    }
+    override fun createCenterPanel() = settingsPanelUi(existingAccessToken, existingHostname, settingsModel)
 
     override fun doValidate(): ValidationInfo? {
-        panel.apply()
-        return if (settingsModel.token.isNotEmpty()) {
-            null
+        return null
+/*        panel.apply()
+        return if (settingsModel.token.isEmpty()) {
+            ValidationInfo("TargetProcess Access token is required")
+        } else if (settingsModel.hostname.isEmpty()) {
+            ValidationInfo("TargetProcess URL is required")
         } else {
-            ValidationInfo("Access token is required")
-        }
+            null
+        }*/
     }
 
     @ApiStatus.Internal
     data class SettingsModel(
-        var token: String = EMPTY_STRING
+        var token: String = EMPTY_STRING,
+        var hostname: String = EMPTY_STRING
     )
 }

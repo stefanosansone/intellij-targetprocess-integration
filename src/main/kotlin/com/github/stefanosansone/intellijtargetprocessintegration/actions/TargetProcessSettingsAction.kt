@@ -1,23 +1,26 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.actions
 
-import com.github.stefanosansone.intellijtargetprocessintegration.configuration.PluginSettingsState
-import com.github.stefanosansone.intellijtargetprocessintegration.dialogs.SettingsDialogWrapper
+import com.github.stefanosansone.intellijtargetprocessintegration.settings.TargetProcessSettingsConfigurable
+import com.github.stefanosansone.intellijtargetprocessintegration.settings.TargetProcessSettingsState
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.options.ShowSettingsUtil
 
 class TargetProcessSettingsAction : AnAction() {
 
-    private val pluginSettingsState
-        get() = PluginSettingsState.instance.state
+    private val targetProcessSettingsState
+        get() = TargetProcessSettingsState.instance.state
     override fun update(event: AnActionEvent) {
         // Using the event, evaluate the context,
         // and enable or disable the action.
     }
 
     override fun actionPerformed(event: AnActionEvent) {
-        val settingsDialog = SettingsDialogWrapper()
+        event.project?.let { ShowSettingsUtil.getInstance().showSettingsDialog(it, TargetProcessSettingsConfigurable()) }
+/*        val settingsDialog = SettingsDialogWrapper()
         if (settingsDialog.showAndGet()) {
-            pluginSettingsState.targetProcessAccessToken = settingsDialog.settingsModel.token
-        }
+            targetProcessSettingsState.targetProcessAccessToken = settingsDialog.settingsModel.token
+            targetProcessSettingsState.targetProcessHostname = settingsDialog.settingsModel.hostname
+        }*/
     }
 }

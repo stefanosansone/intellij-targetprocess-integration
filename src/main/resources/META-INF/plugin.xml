@@ -6,12 +6,18 @@
 
     <depends>com.intellij.modules.platform</depends>
 
-    <resource-bundle>messages.MyBundle</resource-bundle>
+    <resource-bundle>messages.TargetProcessIntegrationBundle</resource-bundle>
 
 
     <extensions defaultExtensionNs="com.intellij">
+        <projectConfigurable
+                parentId="tools"
+                id="tpi.project.settings"
+                displayName="Target Process Integration"
+                nonDefaultProject="true"
+                instance="com.github.stefanosansone.intellijtargetprocessintegration.settings.TargetProcessSettingsConfigurable"/>
 
-        <applicationService serviceImplementation="com.github.stefanosansone.intellijtargetprocessintegration.configuration.PluginSettingsState"/>
+        <applicationService serviceImplementation="com.github.stefanosansone.intellijtargetprocessintegration.settings.TargetProcessSettingsState"/>
 
         <iconMapper mappingFile="TargetProcessIconMappings.json"/>
         <toolWindow

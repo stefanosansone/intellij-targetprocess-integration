@@ -1,4 +1,4 @@
-package com.github.stefanosansone.intellijtargetprocessintegration.configuration
+package com.github.stefanosansone.intellijtargetprocessintegration.settings
 
 import com.github.stefanosansone.intellijtargetprocessintegration.util.EMPTY_STRING
 import com.intellij.openapi.application.ApplicationManager
@@ -8,7 +8,7 @@ import com.intellij.openapi.components.Storage
 import com.intellij.util.xmlb.XmlSerializerUtil
 
 @State(name = "TargetProcessStoredConfiguration", storages = [Storage("TargetProcessStoredConfiguration.xml")])
-class PluginSettingsState : PersistentStateComponent<PluginSettingsState.PluginState> {
+class TargetProcessSettingsState : PersistentStateComponent<TargetProcessSettingsState.PluginState> {
 
     var pluginState: PluginState = PluginState()
 
@@ -21,11 +21,12 @@ class PluginSettingsState : PersistentStateComponent<PluginSettingsState.PluginS
     }
 
     companion object {
-        val instance: PluginSettingsState
-            get() = ApplicationManager.getApplication().getService(PluginSettingsState::class.java)
+        val instance: TargetProcessSettingsState
+            get() = ApplicationManager.getApplication().getService(TargetProcessSettingsState::class.java)
     }
 
     class PluginState {
         var targetProcessAccessToken = EMPTY_STRING
+        var targetProcessHostname = EMPTY_STRING
     }
 }
