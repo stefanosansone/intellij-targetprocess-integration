@@ -1,13 +1,14 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.settings.ui
 
-import com.github.stefanosansone.intellijtargetprocessintegration.dialogs.SettingsDialogWrapper
+import com.github.stefanosansone.intellijtargetprocessintegration.TargetProcessIntegrationBundle
+import com.github.stefanosansone.intellijtargetprocessintegration.settings.TargetProcessSettingsState
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.dsl.builder.*
 
 fun settingsPanelUi(
     existingToken: String,
     existingHostname: String,
-    settingsModel: SettingsDialogWrapper.SettingsModel
+    settingsState: TargetProcessSettingsState.PluginState
 ): DialogPanel {
     return panel {
         group("TargetProcess General Configuration") {
@@ -15,16 +16,19 @@ fun settingsPanelUi(
                 row {
                     textField()
                         .label("TargetProcess URL:")
-                        .bindText(settingsModel::hostname)
+                        .bindText(settingsState::targetProcessHostname)
                         .text(existingHostname)
                         .validationOnApply {
                             when {
-                                it.text.isBlank() -> error("URL is required")
+                                it.text.isBlank() -> error(TargetProcessIntegrationBundle.message("tps.settings.hostname.error.empty"))
                                 else -> null
                             }
                         }
                         .align(AlignX.FILL)
                         .comment("<font color=\"#DFE1E5\"><i>Example: https://myaccount.tpondemand.com</i></font>")
+                    button(TargetProcessIntegrationBundle.message("tps.settings.hostname.validation")) {
+
+                    }
                 }
             }
         }
@@ -41,9 +45,8 @@ fun settingsPanelUi(
             row { text("7. Press 'Create'. This will generate a new token.") }
             row { text("8. Copy and paste your new TargetProcess Access Token in the box below.") }.bottomGap(BottomGap.MEDIUM)
             panel {
-                row {
+                row("Existing TargetProcess access token:") {
                     passwordField()
-                        .label("Existing TargetProcess access token:")
                         .text(existingToken)
                         .align(AlignX.FILL)
                         .enabled(false)
@@ -53,7 +56,7 @@ fun settingsPanelUi(
                 row {
                     textField()
                         .label("New TargetProcess access token:")
-                        .bindText(settingsModel::token)
+                        .bindText(settingsState::targetProcessAccessToken)
                         .validationOnApply {
                             when {
                                 it.text.isBlank() -> error("Access Token is required")
