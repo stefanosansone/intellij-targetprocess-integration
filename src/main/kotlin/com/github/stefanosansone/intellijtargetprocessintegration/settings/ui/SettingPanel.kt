@@ -2,42 +2,46 @@ package com.github.stefanosansone.intellijtargetprocessintegration.settings.ui
 
 import com.github.stefanosansone.intellijtargetprocessintegration.TargetProcessIntegrationBundle
 import com.github.stefanosansone.intellijtargetprocessintegration.settings.TargetProcessSettingsState
+import com.github.stefanosansone.intellijtargetprocessintegration.util.isAccessTokenValid
+import com.github.stefanosansone.intellijtargetprocessintegration.util.isValidUrl
+import com.github.stefanosansone.intellijtargetprocessintegration.util.withScheme
+import com.intellij.icons.AllIcons
+import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.dsl.builder.*
 
-fun settingsPanelUi(
+fun settingsPanel(
     existingToken: String,
     existingHostname: String,
     settingsState: TargetProcessSettingsState.PluginState
 ): DialogPanel {
     return panel {
-        group("TargetProcess General Configuration") {
+        group(TargetProcessIntegrationBundle.message("tps.settings.configuration")) {
             panel {
                 row {
                     textField()
-                        .label("TargetProcess URL:")
+                        .label(TargetProcessIntegrationBundle.message("tps.settings.configuration.hostname"))
                         .bindText(settingsState::targetProcessHostname)
                         .text(existingHostname)
                         .validationOnApply {
+                            it.text = it.text.withScheme()
                             when {
-                                it.text.isBlank() -> error(TargetProcessIntegrationBundle.message("tps.settings.hostname.error.empty"))
+                                it.text.isNotEmpty() && !it.text.isValidUrl() -> error(TargetProcessIntegrationBundle.message("tps.settings.configuration.hostname.error.invalid"))
                                 else -> null
                             }
                         }
                         .align(AlignX.FILL)
                         .comment("<font color=\"#DFE1E5\"><i>Example: https://myaccount.tpondemand.com</i></font>")
-                    button(TargetProcessIntegrationBundle.message("tps.settings.hostname.validation")) {
-
-                    }
                 }
             }
         }
-        group("TargetProcess Access Token Setup") {
+        group(TargetProcessIntegrationBundle.message("tps.settings.token")) {
             row {
-                text("A TargetProcess access token is required to set the IntelliJ integration plugin.<br>If you wish to create a new one, follow these steps:")
+                text(TargetProcessIntegrationBundle.message("tps.settings.token.steps.description"))
             }.bottomGap(BottomGap.SMALL)
-            row { text("1. Login to your TargetProcess account.") }
-            row { text("2. Click your account avatar in the top right area of the windows.") }
+            row { text(TargetProcessIntegrationBundle.message("tps.settings.token.steps.one")) }
+            row { text(TargetProcessIntegrationBundle.message("tps.settings.token.steps.two")) }
             row { text("3. Select your account name from the drop-down menu under your account avatar.") }
             row { text("4. Select the 'Access Tokens' tab.") }
             row { text("5. Click the '+ Add token' button.") }
@@ -45,11 +49,18 @@ fun settingsPanelUi(
             row { text("7. Press 'Create'. This will generate a new token.") }
             row { text("8. Copy and paste your new TargetProcess Access Token in the box below.") }.bottomGap(BottomGap.MEDIUM)
             panel {
+                val action = object : DumbAwareAction("Delete Token", "Action description", AllIcons.Actions.Cancel) {
+                    override fun actionPerformed(e: AnActionEvent) {
+                    }
+                }
                 row("Existing TargetProcess access token:") {
                     passwordField()
                         .text(existingToken)
                         .align(AlignX.FILL)
+                        .resizableColumn()
                         .enabled(false)
+                        .resizableColumn()
+                    actionButton(action)
                 }
             }
             panel {
@@ -59,7 +70,7 @@ fun settingsPanelUi(
                         .bindText(settingsState::targetProcessAccessToken)
                         .validationOnApply {
                             when {
-                                it.text.isBlank() -> error("Access Token is required")
+                                isAccessTokenValid(it.text) -> error("Access Token format not valid")
                                 else -> null
                             }
                         }
