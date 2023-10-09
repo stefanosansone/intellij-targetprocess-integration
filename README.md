@@ -39,6 +39,7 @@ This plugin integrates TargetProcessinto your JetBrains IDE, enabling you to vie
 
 ## Disclaimer
 This plugin is NOT an official Apptio product
+
 ---
 This plugin is based on the [IntelliJ Platform Plugin Template][template]
 and used the [IntelliJ Platform UI Guidelines][ui].
