@@ -42,7 +42,7 @@ This plugin is NOT an official Apptio product
 
 ---
 This plugin is based on the [IntelliJ Platform Plugin Template][template]
-and used the [IntelliJ Platform UI Guidelines][ui].
+and uses the [IntelliJ Platform UI Guidelines][ui].
 
 [template]: https://github.com/JetBrains/intellij-platform-plugin-template
 [ui]: https://jetbrains.github.io/ui/
