@@ -6,7 +6,7 @@
 
 ## Overview
 <!-- Plugin description -->
-This plugin integrates TargetProcessinto your JetBrains IDE, enabling you to view tasks and track activities without having to leave your development environment.
+This plugin integrates TargetProcess into your JetBrains IDE, enabling you to view tasks and track activities without having to leave your development environment.
 <!-- Plugin description end -->
 
 ## Installation
