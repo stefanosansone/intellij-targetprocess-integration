@@ -17,23 +17,27 @@
                 nonDefaultProject="true"
                 instance="com.github.stefanosansone.intellijtargetprocessintegration.settings.TargetProcessSettingsConfigurable"/>
 
-        <applicationService serviceImplementation="com.github.stefanosansone.intellijtargetprocessintegration.settings.TargetProcessSettingsState"/>
+        <applicationService
+                serviceImplementation="com.github.stefanosansone.intellijtargetprocessintegration.settings.TargetProcessSettingsState"/>
 
         <iconMapper mappingFile="TargetProcessIconMappings.json"/>
         <toolWindow
-                factoryClass="com.github.stefanosansone.intellijtargetprocessintegration.toolWindow.TargetProcessToolWindowFactory"
                 id="TargetProcess"
+                anchor="bottom"
+                factoryClass="com.github.stefanosansone.intellijtargetprocessintegration.toolWindow.TargetProcessToolWindowFactory"
                 icon="com.github.stefanosansone.intellijtargetprocessintegration.icons.TargetProcessIcons.TargetProcessToolWindow"
         />
     </extensions>
 
     <applicationListeners>
-        <listener class="com.github.stefanosansone.intellijtargetprocessintegration.listeners.MyApplicationActivationListener" topic="com.intellij.openapi.application.ApplicationActivationListener"/>
+        <listener
+                class="com.github.stefanosansone.intellijtargetprocessintegration.listeners.MyApplicationActivationListener"
+                topic="com.intellij.openapi.application.ApplicationActivationListener"/>
     </applicationListeners>
 
     <actions>
         <action
-                id="org.intellij.sdk.action.PopupDialogAction"
+                id="ShowTargetProcessSettings"
                 class="com.github.stefanosansone.intellijtargetprocessintegration.actions.TargetProcessSettingsAction"
                 text="TargetProcess Settings"
                 description="TargetProcess integration settings">

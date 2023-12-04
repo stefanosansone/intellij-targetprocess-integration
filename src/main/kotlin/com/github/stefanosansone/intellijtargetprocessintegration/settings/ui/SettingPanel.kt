@@ -4,15 +4,11 @@ import com.github.stefanosansone.intellijtargetprocessintegration.TargetProcessI
 import com.github.stefanosansone.intellijtargetprocessintegration.settings.TargetProcessSettingsState
 import com.github.stefanosansone.intellijtargetprocessintegration.util.isAccessTokenValid
 import com.github.stefanosansone.intellijtargetprocessintegration.util.isValidUrl
-import com.github.stefanosansone.intellijtargetprocessintegration.util.withScheme
-import com.intellij.icons.AllIcons
-import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.project.DumbAwareAction
+import com.github.stefanosansone.intellijtargetprocessintegration.util.removeUrlPrefix
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.dsl.builder.*
 
 fun settingsPanel(
-    existingToken: String,
     existingHostname: String,
     settingsState: TargetProcessSettingsState.PluginState
 ): DialogPanel {
@@ -25,7 +21,7 @@ fun settingsPanel(
                         .bindText(settingsState::targetProcessHostname)
                         .text(existingHostname)
                         .validationOnApply {
-                            it.text = it.text.withScheme()
+                            it.text = it.text.removeUrlPrefix()
                             when {
                                 it.text.isNotEmpty() && !it.text.isValidUrl() -> error(TargetProcessIntegrationBundle.message("tps.settings.configuration.hostname.error.invalid"))
                                 else -> null
@@ -49,32 +45,18 @@ fun settingsPanel(
             row { text("7. Press 'Create'. This will generate a new token.") }
             row { text("8. Copy and paste your new TargetProcess Access Token in the box below.") }.bottomGap(BottomGap.MEDIUM)
             panel {
-                val action = object : DumbAwareAction("Delete Token", "Action description", AllIcons.Actions.Cancel) {
-                    override fun actionPerformed(e: AnActionEvent) {
-                    }
-                }
-                row("Existing TargetProcess access token:") {
+                row("TargetProcess access token:") {
                     passwordField()
-                        .text(existingToken)
+                        .bindText(settingsState::targetProcessAccessToken)
                         .align(AlignX.FILL)
                         .resizableColumn()
-                        .enabled(false)
                         .resizableColumn()
-                    actionButton(action)
-                }
-            }
-            panel {
-                row {
-                    textField()
-                        .label("New TargetProcess access token:")
-                        .bindText(settingsState::targetProcessAccessToken)
                         .validationOnApply {
                             when {
-                                isAccessTokenValid(it.text) -> error("Access Token format not valid")
+                                !isAccessTokenValid(it.text) && !it.text.isNullOrEmpty() -> error("Access Token format not valid")
                                 else -> null
                             }
                         }
-                        .align(AlignX.FILL)
                         .comment("<font color=\"#DFE1E5\"><i>Note: this token will be stored securely on your local computer</i></font>")
                 }
             }

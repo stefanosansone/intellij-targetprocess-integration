@@ -14,9 +14,8 @@ internal class TargetProcessSettingsConfigurable : BoundSearchableConfigurable(
 
     private val settingsState = TargetProcessSettingsState.instance.pluginState
 
-    private var existingAccessToken = TargetProcessSettingsState.instance.state.targetProcessAccessToken
     private var existingHostname = TargetProcessSettingsState.instance.state.targetProcessHostname
-    private val panel = settingsPanel(existingAccessToken, existingHostname, settingsState)
+    private val panel = settingsPanel(existingHostname, settingsState)
 
     override fun createPanel(): DialogPanel {
         return panel
