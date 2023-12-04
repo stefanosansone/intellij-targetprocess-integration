@@ -66,9 +66,7 @@ class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
 
     override fun shouldBeAvailable(project: Project) = true
 
-    class TargetProcessToolWindow(
-        //val toolWindow: ToolWindow
-    ) {
+    class TargetProcessToolWindow {
         //private val service = toolWindow.project.service<TargetProcessIntegrationService>()
 
         private val listPanel = JBScrollPane(toolWindowListPanel { showItemDetails() }).apply {
