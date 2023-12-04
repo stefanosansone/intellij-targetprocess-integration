@@ -33,7 +33,7 @@ class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
         if (service.getAccessToken().isEmpty()) {
             noAccountPanel(disposable, toolWindow)
         } else {
-            val myToolWindow = TargetProcessToolWindow(toolWindow)
+            val myToolWindow = TargetProcessToolWindow()//toolWindow)
             val content = ContentFactory.getInstance().createContent(myToolWindow.getContent(), "My Items", false)
             toolWindow.contentManager.addContent(content)
         }
@@ -48,7 +48,7 @@ class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
         emptyTextPanel.emptyText
             .appendText("Target Process access token not configured")
             .appendLine(
-                "Go to TargetProcess Settings",
+                "Go to TargetProcess settings",
                 SimpleTextAttributes.LINK_ATTRIBUTES,
                 ActionUtil.createActionListener(
                     "ShowTargetProcessSettings",
@@ -67,7 +67,7 @@ class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
     override fun shouldBeAvailable(project: Project) = true
 
     class TargetProcessToolWindow(
-        val toolWindow: ToolWindow
+        //val toolWindow: ToolWindow
     ) {
         //private val service = toolWindow.project.service<TargetProcessIntegrationService>()
 
