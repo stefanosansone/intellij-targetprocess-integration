@@ -11,6 +11,11 @@ plugins {
     alias(libs.plugins.changelog) // Gradle Changelog Plugin
     alias(libs.plugins.qodana) // Gradle Qodana Plugin
     alias(libs.plugins.kover) // Gradle Kover Plugin
+    alias(libs.plugins.serialization)
+}
+
+configurations.all {
+    exclude("org.slf4j", "slf4j-api")
 }
 
 group = properties("pluginGroup").get()
@@ -25,6 +30,9 @@ dependencies {
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.logging)
+    implementation(libs.ktor.client.resources)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.client.content.negotiation)
 }
 
 // Set the JVM language level used to build the project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.
