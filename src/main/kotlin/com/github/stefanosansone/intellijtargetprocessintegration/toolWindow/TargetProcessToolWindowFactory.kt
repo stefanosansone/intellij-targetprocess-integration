@@ -3,8 +3,8 @@ package com.github.stefanosansone.intellijtargetprocessintegration.toolWindow
 import com.github.stefanosansone.intellijtargetprocessintegration.api.KtorClient
 import com.github.stefanosansone.intellijtargetprocessintegration.api.data.Assignables
 import com.github.stefanosansone.intellijtargetprocessintegration.services.TargetProcessIntegrationService
-import com.github.stefanosansone.intellijtargetprocessintegration.toolWindow.ui.toolWindowDetailPanel
-import com.github.stefanosansone.intellijtargetprocessintegration.toolWindow.ui.toolWindowListPanel
+import com.github.stefanosansone.intellijtargetprocessintegration.toolWindow.ui.DetailPanel
+import com.github.stefanosansone.intellijtargetprocessintegration.toolWindow.ui.getAssignablesList
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.ex.ActionUtil
@@ -15,7 +15,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
-import com.intellij.ui.JBSplitter
+import com.intellij.ui.OnePixelSplitter
 import com.intellij.ui.SimpleTextAttributes
 import com.intellij.ui.components.JBPanelWithEmptyText
 import com.intellij.ui.components.JBScrollPane
@@ -67,23 +67,28 @@ class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
     override fun shouldBeAvailable(project: Project) = true
 
     class TargetProcessToolWindow {
-        //private val service = toolWindow.project.service<TargetProcessIntegrationService>()
 
-        private val listPanel = JBScrollPane(toolWindowListPanel { showItemDetails() }).apply {
+        private val listPanel = JBScrollPane(
+            getAssignablesList { description ->
+                showItemDetails(description)
+            }
+        ).apply {
             border = JBUI.Borders.empty()
         }
 
-        private val detailPanel = JBScrollPane(toolWindowDetailPanel()).apply {
-            border = JBUI.Borders.empty()
-        }
+        private val detailPanel = DetailPanel()
 
-        private val myItemsSplitter = JBSplitter(false).apply {
+        private val myItemsSplitter = OnePixelSplitter(false).apply {
             setHonorComponentsMinimumSize(false)
             firstComponent = listPanel
         }
 
-        private fun showItemDetails() {
+
+        private fun showItemDetails(description: String) {
+            detailPanel.updateDescription(description)
             myItemsSplitter.secondComponent = detailPanel
+            detailPanel.revalidate()
+            detailPanel.repaint()
         }
 
         fun getContent() = myItemsSplitter

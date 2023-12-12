@@ -53,7 +53,7 @@ fun settingsPanel(
                         .resizableColumn()
                         .validationOnApply {
                             when {
-                                !isAccessTokenValid(it.password.toString()) && it.password.toString().isNotEmpty() -> error("Access Token format not valid")
+                                !isAccessTokenValid(it.text) && it.text.isNotEmpty() -> error("Access Token format not valid")
                                 else -> null
                             }
                         }

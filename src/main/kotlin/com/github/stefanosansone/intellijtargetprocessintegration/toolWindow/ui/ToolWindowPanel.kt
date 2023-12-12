@@ -2,16 +2,14 @@ package com.github.stefanosansone.intellijtargetprocessintegration.toolWindow.ui
 
 import com.github.stefanosansone.intellijtargetprocessintegration.toolWindow.getAssignables
 import com.github.stefanosansone.intellijtargetprocessintegration.toolWindow.getStates
-import com.intellij.ui.dsl.builder.panel
 import com.intellij.ui.render.RenderingUtil
 import com.intellij.ui.treeStructure.Tree
 import com.intellij.util.ui.tree.TreeUtil
-import javax.swing.JPanel
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreeSelectionModel
 
-fun toolWindowListPanel(onSelectNode: () -> Unit): Tree {
+fun getAssignablesList(onSelectNode: (String) -> Unit): Tree {
     val root = DefaultMutableTreeNode()
     val states = getStates().sortedBy { it.numericPriority }.map { it.name }.distinct()
     states.forEach { state ->
@@ -37,21 +35,11 @@ fun toolWindowListPanel(onSelectNode: () -> Unit): Tree {
         if (it.isAddedPath) {
             val selectedNode = it.path.lastPathComponent as? DefaultMutableTreeNode
             selectedNode?.let { node ->
-                onSelectNode
+                val description = getAssignables().first { it.name == node.userObject.toString() }.description ?: "No description"
+                onSelectNode(description)
             }
         }
     }
     TreeUtil.installActions(tree)
     return tree
 }
-
-fun toolWindowDetailPanel(): JPanel {
-    return panel {
-        row {
-            label("Detail panel")
-        }
-    }
-}
-
-
-

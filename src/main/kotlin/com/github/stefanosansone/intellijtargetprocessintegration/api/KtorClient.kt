@@ -2,7 +2,6 @@ package com.github.stefanosansone.intellijtargetprocessintegration.api
 
 import com.github.stefanosansone.intellijtargetprocessintegration.api.data.Assignables
 import com.github.stefanosansone.intellijtargetprocessintegration.settings.TargetProcessSettingsState
-import com.intellij.openapi.diagnostic.thisLogger
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
@@ -30,11 +29,11 @@ class KtorClient: TargetProcessClient {
             })
         }
         install(Logging) {
-            logger = object : Logger {
+/*            logger = object : Logger {
                 override fun log(message: String) {
                     thisLogger().warn("KTORRR : $message")
                 }
-            }
+            }*/
             level = LogLevel.ALL
         }
         install(DefaultRequest) {
@@ -52,7 +51,7 @@ class KtorClient: TargetProcessClient {
     override suspend fun assignables(): Assignables {
         return client.get {
             url("${API_PATH}/Assignables/")
-            parameter("select","{ResourceType,Name,Id,EntityState,Effort,Tags,AssignedUser}")
+            parameter("select","{ResourceType,Name,Id,EntityState,Effort,Tags,AssignedUser,Description}")
             parameter("take","1000")
             parameter("filter","?AssignedUser.Where(it is Me)")
         }.body()

@@ -14,6 +14,7 @@ data class Assignables(
         val id: Int,
         val name: String,
         val resourceType: String,
+        val description: String? = null,
         val tags: String
     ){
         @Serializable
