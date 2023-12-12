@@ -1,7 +1,7 @@
 [versions]
 # libraries
 annotations = "24.1.0"
-ktor = "2.3.6"
+ktor = "2.3.7"
 flexmark = "0.64.8"
 
 # plugins
