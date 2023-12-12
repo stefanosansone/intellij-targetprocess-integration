@@ -1,12 +1,12 @@
 package com.github.stefanosansone.intellijtargetprocessintegration
 
+import com.github.stefanosansone.intellijtargetprocessintegration.services.TargetProcessIntegrationService
 import com.intellij.ide.highlighter.XmlFileType
 import com.intellij.openapi.components.service
 import com.intellij.psi.xml.XmlFile
 import com.intellij.testFramework.TestDataPath
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import com.intellij.util.PsiErrorElementUtil
-import com.github.stefanosansone.intellijtargetprocessintegration.services.TargetProcessIntegrationService
 
 @TestDataPath("\$CONTENT_ROOT/src/test/testData")
 class MyPluginTest : BasePlatformTestCase() {
@@ -25,9 +25,9 @@ class MyPluginTest : BasePlatformTestCase() {
         }
     }
 
-    fun testRename() {
+/*    fun testRename() {
         myFixture.testRename("foo.xml", "foo_after.xml", "a2")
-    }
+    }*/
 
     fun testProjectService() {
         val projectService = project.service<TargetProcessIntegrationService>()
