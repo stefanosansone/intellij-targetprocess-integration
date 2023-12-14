@@ -33,7 +33,7 @@ dependencies {
     implementation(libs.ktor.client.resources)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.flexmark.all)
+    implementation(libs.intellij.markdown)
 }
 
 // Set the JVM language level used to build the project. Use Java 11 for 2020.3+, and Java 17 for 2022.2+.

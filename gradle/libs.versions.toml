@@ -2,7 +2,7 @@
 # libraries
 annotations = "24.1.0"
 ktor = "2.3.7"
-flexmark = "0.64.8"
+markdown = "0.6.0"
 
 # plugins
 kotlin = "1.9.21"
@@ -20,7 +20,8 @@ ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version
 ktor-client-resources = { group = "io.ktor", name = "ktor-client-resources", version.ref = "ktor" }
 ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
-flexmark-all = { group = "com.vladsch.flexmark", name = "flexmark-all", version.ref = "flexmark" }
+intellij-markdown = { group = "org.jetbrains", name = "markdown", version.ref = "markdown" }
+
 
 [plugins]
 changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
