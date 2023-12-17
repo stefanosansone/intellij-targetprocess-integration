@@ -1,13 +1,14 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.toolWindow
 
-import com.github.stefanosansone.intellijtargetprocessintegration.api.KtorClient
+import com.github.stefanosansone.intellijtargetprocessintegration.api.TargetProcessRepository
 import com.github.stefanosansone.intellijtargetprocessintegration.api.data.Assignables
 import com.github.stefanosansone.intellijtargetprocessintegration.services.TargetProcessIntegrationService
+import com.github.stefanosansone.intellijtargetprocessintegration.settings.TargetProcessSettingsConfigurable
 import com.github.stefanosansone.intellijtargetprocessintegration.toolWindow.ui.DetailPanel
-import com.github.stefanosansone.intellijtargetprocessintegration.toolWindow.ui.getAssignablesList
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.ex.ActionUtil
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.DumbAware
@@ -21,9 +22,42 @@ import com.intellij.ui.components.JBPanelWithEmptyText
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.content.ContentFactory
 import com.intellij.util.ui.JBUI
-import kotlinx.coroutines.runBlocking
+import getAssignablesList
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
+
+    private val scope = CoroutineScope(SupervisorJob())
+    private val assignables = mutableListOf<Assignables.Item>()
+
+    override fun init(toolWindow: ToolWindow) {
+        val bus = ApplicationManager.getApplication().messageBus.connect(toolWindow.disposable)
+        bus.subscribe(
+            TargetProcessSettingsConfigurable.Util.SETTINGS_CHANGED,
+            object : TargetProcessSettingsConfigurable.SettingsChangedListener {
+                override fun settingsChanged() {
+                    createToolWindowContent(toolWindow.project, toolWindow)
+                }
+            })
+        scope.launch {
+            refreshAssignablesData(toolWindow)
+        }
+
+    }
+
+    private suspend fun refreshAssignablesData(toolWindow: ToolWindow) {
+        try {
+            assignables.clear()
+            assignables.addAll(TargetProcessRepository.getAssignables())
+            ApplicationManager.getApplication().invokeLater {
+                createToolWindowContent(toolWindow.project, toolWindow)
+            }
+        } catch (e: Exception) {
+            // Handle any errors (e.g., show an error message in the tool window)
+        }
+    }
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
         val disposable = Disposer.newDisposable("MyItems tab disposable")
@@ -33,7 +67,7 @@ class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
         if (service.getAccessToken().isEmpty()) {
             noAccountPanel(disposable, toolWindow)
         } else {
-            val myToolWindow = TargetProcessToolWindow()//toolWindow)
+            val myToolWindow = TargetProcessToolWindow(assignables)
             val content = ContentFactory.getInstance().createContent(myToolWindow.getContent(), "My Items", false)
             toolWindow.contentManager.addContent(content)
         }
@@ -66,10 +100,10 @@ class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
 
     override fun shouldBeAvailable(project: Project) = true
 
-    class TargetProcessToolWindow {
+    class TargetProcessToolWindow(assignables: List<Assignables.Item>) {
 
         private val listPanel = JBScrollPane(
-            getAssignablesList { description ->
+            getAssignablesList(assignables) { description ->
                 showItemDetails(description)
             }
         ).apply {
@@ -84,32 +118,21 @@ class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
         }
 
 
-        private fun showItemDetails(description: String) {
-            detailPanel.updateDescription(description)
-            myItemsSplitter.secondComponent = detailPanel
-            detailPanel.revalidate()
-            detailPanel.repaint()
+        private fun showItemDetails(description: String?) {
+            description?.let {
+                detailPanel.updateDescription(description)
+                myItemsSplitter.secondComponent = detailPanel
+                detailPanel.revalidate()
+                detailPanel.repaint()
+            } ?: run {
+                val emptyTextPanel = JBPanelWithEmptyText()
+                emptyTextPanel.emptyText
+                    .appendText("The selected entity has no description")
+                myItemsSplitter.secondComponent = emptyTextPanel
+            }
         }
 
         fun getContent() = myItemsSplitter
     }
 
-}
-
-fun getStates(): List<Assignables.Item.EntityState> {
-    val client = KtorClient()
-    var assignables: List<Assignables.Item.EntityState>
-    runBlocking {
-        assignables = client.assignables().items.map { it.entityState }.distinct()
-    }
-    return assignables
-}
-
-fun getAssignables(): List<Assignables.Item> {
-    val client = KtorClient()
-    var assignables: List<Assignables.Item>
-    runBlocking {
-        assignables = client.assignables().items
-    }
-    return assignables
 }

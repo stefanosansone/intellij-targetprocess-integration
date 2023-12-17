@@ -5,6 +5,7 @@ import com.github.stefanosansone.intellijtargetprocessintegration.settings.ui.se
 import com.github.stefanosansone.intellijtargetprocessintegration.util.SETTINGS_ID
 import com.intellij.openapi.options.BoundSearchableConfigurable
 import com.intellij.openapi.ui.DialogPanel
+import com.intellij.util.messages.Topic
 
 internal class TargetProcessSettingsConfigurable : BoundSearchableConfigurable(
     TargetProcessIntegrationBundle.message("tps.settings.name"),
@@ -25,5 +26,15 @@ internal class TargetProcessSettingsConfigurable : BoundSearchableConfigurable(
         if(this.panel.validateAll().isEmpty()){
             super.apply()
         }
+    }
+
+    interface SettingsChangedListener {
+        fun settingsChanged()
+    }
+
+    object Util {
+        @JvmField
+        @Topic.AppLevel
+        val SETTINGS_CHANGED = Topic(SettingsChangedListener::class.java, Topic.BroadcastDirection.NONE)
     }
 }
