@@ -2,7 +2,7 @@
 # libraries
 annotations = "24.1.0"
 ktor = "2.3.7"
-markdown = "0.6.0"
+markdown = "0.6.1"
 
 # plugins
 kotlin = "1.9.21"
