@@ -2,7 +2,7 @@
 
 > [!WARNING]
 >
-> This project is work in progress and not working yet.
+> Work in progress.
 
 ![Build](https://github.com/stefanosansone/intellij-targetprocess-integration/workflows/Build/badge.svg)
 [![Version](https://img.shields.io/jetbrains/plugin/v/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/PLUGIN_ID)
