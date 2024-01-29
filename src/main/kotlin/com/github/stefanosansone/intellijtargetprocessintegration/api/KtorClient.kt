@@ -1,7 +1,7 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.api
 
-import com.github.stefanosansone.intellijtargetprocessintegration.api.data.Assignables
-import com.github.stefanosansone.intellijtargetprocessintegration.settings.TargetProcessSettingsState
+import com.github.stefanosansone.intellijtargetprocessintegration.api.model.Assignables
+import com.github.stefanosansone.intellijtargetprocessintegration.ui.settings.TargetProcessSettingsState
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*

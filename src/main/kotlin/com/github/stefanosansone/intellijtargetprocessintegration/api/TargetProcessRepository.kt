@@ -1,6 +1,6 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.api
 
-import com.github.stefanosansone.intellijtargetprocessintegration.api.data.Assignables
+import com.github.stefanosansone.intellijtargetprocessintegration.api.model.Assignables
 
 object TargetProcessRepository {
 

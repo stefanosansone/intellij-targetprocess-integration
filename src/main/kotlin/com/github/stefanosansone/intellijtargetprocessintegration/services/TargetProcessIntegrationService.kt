@@ -1,7 +1,7 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.services
 
 import com.github.stefanosansone.intellijtargetprocessintegration.TargetProcessIntegrationBundle
-import com.github.stefanosansone.intellijtargetprocessintegration.settings.TargetProcessSettingsState
+import com.github.stefanosansone.intellijtargetprocessintegration.ui.settings.TargetProcessSettingsState
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project

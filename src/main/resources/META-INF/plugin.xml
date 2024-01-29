@@ -15,17 +15,17 @@
                 id="tpi.project.settings"
                 displayName="Target Process Integration"
                 nonDefaultProject="true"
-                instance="com.github.stefanosansone.intellijtargetprocessintegration.settings.TargetProcessSettingsConfigurable"/>
+                instance="com.github.stefanosansone.intellijtargetprocessintegration.ui.settings.TargetProcessSettingsConfigurable"/>
 
         <applicationService
-                serviceImplementation="com.github.stefanosansone.intellijtargetprocessintegration.settings.TargetProcessSettingsState"/>
+                serviceImplementation="com.github.stefanosansone.intellijtargetprocessintegration.ui.settings.TargetProcessSettingsState"/>
 
         <iconMapper mappingFile="TargetProcessIconMappings.json"/>
         <toolWindow
                 id="TargetProcess"
                 anchor="bottom"
-                factoryClass="com.github.stefanosansone.intellijtargetprocessintegration.toolWindow.TargetProcessToolWindowFactory"
-                icon="com.github.stefanosansone.intellijtargetprocessintegration.icons.TargetProcessIcons.TargetProcessToolWindow"
+                factoryClass="com.github.stefanosansone.intellijtargetprocessintegration.ui.toolWindow.TargetProcessToolWindowFactory"
+                icon="com.github.stefanosansone.intellijtargetprocessintegration.ui.icons.TargetProcessIcons.TargetProcessToolWindow"
         />
     </extensions>
 
@@ -43,5 +43,16 @@
                 description="TargetProcess integration settings">
             <add-to-group group-id="ToolsMenu" anchor="first"/>
         </action>
+
+        <group id="TPIntegration.ActionGroup" popup="false">
+            <action id="Github.Workflow.List.Reload"
+                    class="com.github.stefanosansone.intellijtargetprocessintegration.actions.ReloadAssignablesAction"
+                    use-shortcut-of="Refresh"/>
+            <action
+                    id="Github.Actions.Manager.Settings.Open"
+                    class="com.github.stefanosansone.intellijtargetprocessintegration.actions.ShowPluginSettingsAction"
+                    icon="AllIcons.General.Settings"/>
+        </group>
+
     </actions>
 </idea-plugin>

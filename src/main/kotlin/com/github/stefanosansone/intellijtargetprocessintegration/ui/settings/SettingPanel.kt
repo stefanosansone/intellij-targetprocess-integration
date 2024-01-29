@@ -1,7 +1,6 @@
-package com.github.stefanosansone.intellijtargetprocessintegration.settings.ui
+package com.github.stefanosansone.intellijtargetprocessintegration.ui.settings
 
 import com.github.stefanosansone.intellijtargetprocessintegration.TargetProcessIntegrationBundle
-import com.github.stefanosansone.intellijtargetprocessintegration.settings.TargetProcessSettingsState
 import com.github.stefanosansone.intellijtargetprocessintegration.util.isAccessTokenValid
 import com.github.stefanosansone.intellijtargetprocessintegration.util.isValidUrl
 import com.github.stefanosansone.intellijtargetprocessintegration.util.removeUrlPrefix

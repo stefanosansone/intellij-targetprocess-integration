@@ -1,4 +1,4 @@
-package com.github.stefanosansone.intellijtargetprocessintegration.settings
+package com.github.stefanosansone.intellijtargetprocessintegration.ui.settings
 
 import com.github.stefanosansone.intellijtargetprocessintegration.util.EMPTY_STRING
 import com.intellij.openapi.application.ApplicationManager

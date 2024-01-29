@@ -1,4 +1,4 @@
-package com.github.stefanosansone.intellijtargetprocessintegration.api.data
+package com.github.stefanosansone.intellijtargetprocessintegration.api.model
 
 import kotlinx.serialization.Serializable
 

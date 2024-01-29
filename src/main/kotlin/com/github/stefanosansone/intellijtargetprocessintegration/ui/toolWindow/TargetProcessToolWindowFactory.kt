@@ -1,11 +1,14 @@
-package com.github.stefanosansone.intellijtargetprocessintegration.toolWindow
+package com.github.stefanosansone.intellijtargetprocessintegration.ui.toolWindow
 
 import com.github.stefanosansone.intellijtargetprocessintegration.api.TargetProcessRepository
-import com.github.stefanosansone.intellijtargetprocessintegration.api.data.Assignables
+import com.github.stefanosansone.intellijtargetprocessintegration.api.model.Assignables
 import com.github.stefanosansone.intellijtargetprocessintegration.services.TargetProcessIntegrationService
-import com.github.stefanosansone.intellijtargetprocessintegration.settings.TargetProcessSettingsConfigurable
-import com.github.stefanosansone.intellijtargetprocessintegration.toolWindow.ui.DetailPanel
+import com.github.stefanosansone.intellijtargetprocessintegration.ui.panels.DetailPanel
+import com.github.stefanosansone.intellijtargetprocessintegration.ui.panels.getAssignablesList
+import com.github.stefanosansone.intellijtargetprocessintegration.ui.settings.TargetProcessSettingsConfigurable
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.actionSystem.ActionGroup
+import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.ex.ActionUtil
 import com.intellij.openapi.application.ApplicationManager
@@ -22,10 +25,11 @@ import com.intellij.ui.components.JBPanelWithEmptyText
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.content.ContentFactory
 import com.intellij.util.ui.JBUI
-import getAssignablesList
+import com.intellij.util.ui.components.BorderLayoutPanel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import java.awt.BorderLayout
 
 class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
 
@@ -132,7 +136,19 @@ class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
             }
         }
 
-        fun getContent() = myItemsSplitter
+        fun getContent(): BorderLayoutPanel {
+            val component = BorderLayoutPanel()
+            component.add(myItemsSplitter)
+            val actionsManager = ActionManager.getInstance()
+            val actionsGroup = actionsManager.getAction("TPIntegration.ActionGroup") as ActionGroup
+            val actionToolbar = actionsManager
+                .createActionToolbar(ActionPlaces.CONTEXT_TOOLBAR, actionsGroup, false)
+            actionToolbar.targetComponent = component
+
+            component.add(actionToolbar.component, BorderLayout.WEST)
+            component.border
+            return component
+        }
     }
 
 }

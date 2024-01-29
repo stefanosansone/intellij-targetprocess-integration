@@ -1,4 +1,6 @@
-import com.github.stefanosansone.intellijtargetprocessintegration.api.data.Assignables
+package com.github.stefanosansone.intellijtargetprocessintegration.ui.panels
+
+import com.github.stefanosansone.intellijtargetprocessintegration.api.model.Assignables
 import com.intellij.ui.render.RenderingUtil
 import com.intellij.ui.treeStructure.Tree
 import com.intellij.util.ui.tree.TreeUtil

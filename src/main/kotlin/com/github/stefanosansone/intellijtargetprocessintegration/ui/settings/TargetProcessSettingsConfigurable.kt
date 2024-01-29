@@ -1,7 +1,6 @@
-package com.github.stefanosansone.intellijtargetprocessintegration.settings
+package com.github.stefanosansone.intellijtargetprocessintegration.ui.settings
 
 import com.github.stefanosansone.intellijtargetprocessintegration.TargetProcessIntegrationBundle
-import com.github.stefanosansone.intellijtargetprocessintegration.settings.ui.settingsPanel
 import com.github.stefanosansone.intellijtargetprocessintegration.util.SETTINGS_ID
 import com.intellij.openapi.options.BoundSearchableConfigurable
 import com.intellij.openapi.ui.DialogPanel
