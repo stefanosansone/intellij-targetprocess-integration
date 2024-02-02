@@ -12,7 +12,6 @@ class TargetProcessIntegrationService(project: Project) {
 
     init {
         thisLogger().info(TargetProcessIntegrationBundle.message("projectService", project.name))
-        thisLogger().warn("Don't forget to remove all non-needed sample code files with their corresponding registration entries in `plugin.xml`.")
     }
 
     fun getAccessToken() = TargetProcessSettingsState.instance.state.targetProcessAccessToken

@@ -45,21 +45,20 @@ class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
                     createToolWindowContent(toolWindow.project, toolWindow)
                 }
             })
-        scope.launch {
-            refreshAssignablesData(toolWindow)
-        }
-
+        refreshAssignablesData(toolWindow)
     }
 
-    private suspend fun refreshAssignablesData(toolWindow: ToolWindow) {
-        try {
-            assignables.clear()
-            assignables.addAll(TargetProcessRepository.getAssignables())
-            ApplicationManager.getApplication().invokeLater {
-                createToolWindowContent(toolWindow.project, toolWindow)
+    fun refreshAssignablesData(toolWindow: ToolWindow) {
+        scope.launch {
+            try {
+                assignables.clear()
+                assignables.addAll(TargetProcessRepository.getAssignables())
+                ApplicationManager.getApplication().invokeLater {
+                    createToolWindowContent(toolWindow.project, toolWindow)
+                }
+            } catch (e: Exception) {
+                // Handle any errors (e.g., show an error message in the tool window)
             }
-        } catch (e: Exception) {
-            // Handle any errors (e.g., show an error message in the tool window)
         }
     }
 
@@ -104,51 +103,53 @@ class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
 
     override fun shouldBeAvailable(project: Project) = true
 
-    class TargetProcessToolWindow(assignables: List<Assignables.Item>) {
+}
 
-        private val listPanel = JBScrollPane(
-            getAssignablesList(assignables) { description ->
-                showItemDetails(description)
-            }
-        ).apply {
-            border = JBUI.Borders.empty()
+class TargetProcessToolWindow(assignables: List<Assignables.Item>) {
+
+    private val listPanel = JBScrollPane(
+        getAssignablesList(assignables) { description ->
+            showItemDetails(description)
         }
-
-        private val detailPanel = DetailPanel()
-
-        private val myItemsSplitter = OnePixelSplitter(false).apply {
-            setHonorComponentsMinimumSize(false)
-            firstComponent = listPanel
-        }
+    ).apply {
+        border = JBUI.Borders.empty()
+    }
 
 
-        private fun showItemDetails(description: String?) {
-            description?.let {
-                detailPanel.updateDescription(description)
-                myItemsSplitter.secondComponent = detailPanel
-                detailPanel.revalidate()
-                detailPanel.repaint()
-            } ?: run {
-                val emptyTextPanel = JBPanelWithEmptyText()
-                emptyTextPanel.emptyText
-                    .appendText("The selected entity has no description")
-                myItemsSplitter.secondComponent = emptyTextPanel
-            }
-        }
 
-        fun getContent(): BorderLayoutPanel {
-            val component = BorderLayoutPanel()
-            component.add(myItemsSplitter)
-            val actionsManager = ActionManager.getInstance()
-            val actionsGroup = actionsManager.getAction("TPIntegration.ActionGroup") as ActionGroup
-            val actionToolbar = actionsManager
-                .createActionToolbar(ActionPlaces.CONTEXT_TOOLBAR, actionsGroup, false)
-            actionToolbar.targetComponent = component
+    private val detailPanel = DetailPanel()
 
-            component.add(actionToolbar.component, BorderLayout.WEST)
-            component.border
-            return component
+    private val myItemsSplitter = OnePixelSplitter(false).apply {
+        setHonorComponentsMinimumSize(false)
+        firstComponent = listPanel
+    }
+
+
+    private fun showItemDetails(description: String?) {
+        description?.let {
+            detailPanel.updateDescription(description)
+            myItemsSplitter.secondComponent = detailPanel
+            detailPanel.revalidate()
+            detailPanel.repaint()
+        } ?: run {
+            val emptyTextPanel = JBPanelWithEmptyText()
+            emptyTextPanel.emptyText
+                .appendText("The selected entity has no description")
+            myItemsSplitter.secondComponent = emptyTextPanel
         }
     }
 
+    fun getContent(): BorderLayoutPanel {
+        val component = BorderLayoutPanel()
+        component.add(myItemsSplitter)
+        val actionsManager = ActionManager.getInstance()
+        val actionsGroup = actionsManager.getAction("TPIntegration.ActionGroup") as ActionGroup
+        val actionToolbar = actionsManager
+            .createActionToolbar(ActionPlaces.CONTEXT_TOOLBAR, actionsGroup, false)
+        actionToolbar.targetComponent = component
+
+        component.add(actionToolbar.component, BorderLayout.WEST)
+        component.border
+        return component
+    }
 }

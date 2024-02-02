@@ -22,7 +22,7 @@
 
         <iconMapper mappingFile="TargetProcessIconMappings.json"/>
         <toolWindow
-                id="TargetProcess"
+                id="Target Process"
                 anchor="bottom"
                 factoryClass="com.github.stefanosansone.intellijtargetprocessintegration.ui.toolWindow.TargetProcessToolWindowFactory"
                 icon="com.github.stefanosansone.intellijtargetprocessintegration.ui.icons.TargetProcessIcons.TargetProcessToolWindow"

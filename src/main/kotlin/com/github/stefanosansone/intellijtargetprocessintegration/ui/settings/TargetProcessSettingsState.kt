@@ -1,6 +1,5 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.ui.settings
 
-import com.github.stefanosansone.intellijtargetprocessintegration.util.EMPTY_STRING
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
@@ -26,7 +25,7 @@ class TargetProcessSettingsState : PersistentStateComponent<TargetProcessSetting
     }
 
     class PluginState {
-        var targetProcessAccessToken = EMPTY_STRING
-        var targetProcessHostname = EMPTY_STRING
+        var targetProcessAccessToken = ""
+        var targetProcessHostname = ""
     }
 }

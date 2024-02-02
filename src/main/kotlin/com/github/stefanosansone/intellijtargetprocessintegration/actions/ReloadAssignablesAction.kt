@@ -1,11 +1,24 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.actions
 
+import com.github.stefanosansone.intellijtargetprocessintegration.ui.toolWindow.TargetProcessToolWindowFactory
 import com.intellij.icons.AllIcons
 import com.intellij.ide.actions.RefreshAction
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.wm.ToolWindowManager
 
 class ReloadAssignablesAction : RefreshAction("Refresh", null, AllIcons.Actions.Refresh) {
+
+    override fun update(e: AnActionEvent) {
+        val context = e.project?.let { ToolWindowManager.getInstance(it).getToolWindow("Target Process") }
+        e.presentation.isEnabled = context != null
+    }
+
     override fun actionPerformed(e: AnActionEvent) {
-        // TODO
+        e.project?.let { project ->
+            ToolWindowManager.getInstance(project).getToolWindow("Target Process")?.let { toolWindow ->
+                TargetProcessToolWindowFactory().refreshAssignablesData(toolWindow)
+            }
+        }
+
     }
 }
