@@ -16,20 +16,25 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.OnePixelDivider
 import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.OnePixelSplitter
 import com.intellij.ui.SimpleTextAttributes
+import com.intellij.ui.border.CustomLineBorder
 import com.intellij.ui.components.JBPanelWithEmptyText
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.content.ContentFactory
-import com.intellij.util.ui.JBUI
+import com.intellij.util.ui.JBUI.Borders.empty
 import com.intellij.util.ui.components.BorderLayoutPanel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.awt.BorderLayout
+import javax.swing.border.Border
+import javax.swing.border.CompoundBorder
+
 
 class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
 
@@ -112,44 +117,54 @@ class TargetProcessToolWindow(assignables: List<Assignables.Item>) {
             showItemDetails(description)
         }
     ).apply {
-        border = JBUI.Borders.empty()
+        val line: Border = CustomLineBorder(OnePixelDivider.BACKGROUND, 0, 1, 0, 0)
+        border = CompoundBorder(line, empty())
     }
 
 
 
     private val detailPanel = DetailPanel()
 
-    private val myItemsSplitter = OnePixelSplitter(false).apply {
+    private val detailSplitter = OnePixelSplitter(false).apply {
+        proportion = 0.75F
+        val emptyDescriptionPanel = JBPanelWithEmptyText()
+        emptyDescriptionPanel.emptyText.appendText("Select an entity to show description")
+        firstComponent = emptyDescriptionPanel
+        val emptyPropertiesPanel = JBPanelWithEmptyText()
+        emptyPropertiesPanel.emptyText.appendText("Select an entity to show properties")
+        secondComponent = emptyPropertiesPanel
+    }
+
+    private val assignablesSplitter = OnePixelSplitter(false).apply {
         setHonorComponentsMinimumSize(false)
+        proportion = 0.25F
         firstComponent = listPanel
+        secondComponent = detailSplitter
     }
 
 
     private fun showItemDetails(description: String?) {
         description?.let {
             detailPanel.updateDescription(description)
-            myItemsSplitter.secondComponent = detailPanel
+            detailSplitter.firstComponent = detailPanel
             detailPanel.revalidate()
             detailPanel.repaint()
         } ?: run {
             val emptyTextPanel = JBPanelWithEmptyText()
-            emptyTextPanel.emptyText
-                .appendText("The selected entity has no description")
-            myItemsSplitter.secondComponent = emptyTextPanel
+            emptyTextPanel.emptyText.appendText("The selected entity has no description")
+            detailSplitter.firstComponent = emptyTextPanel
         }
     }
 
     fun getContent(): BorderLayoutPanel {
         val component = BorderLayoutPanel()
-        component.add(myItemsSplitter)
+        component.add(assignablesSplitter)
         val actionsManager = ActionManager.getInstance()
         val actionsGroup = actionsManager.getAction("TPIntegration.ActionGroup") as ActionGroup
         val actionToolbar = actionsManager
             .createActionToolbar(ActionPlaces.CONTEXT_TOOLBAR, actionsGroup, false)
         actionToolbar.targetComponent = component
-
         component.add(actionToolbar.component, BorderLayout.WEST)
-        component.border
         return component
     }
 }
