@@ -1,11 +1,11 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.ui.toolWindow
 
-import com.github.stefanosansone.intellijtargetprocessintegration.api.TargetProcessRepository
 import com.github.stefanosansone.intellijtargetprocessintegration.api.model.Assignables
-import com.github.stefanosansone.intellijtargetprocessintegration.services.TargetProcessIntegrationService
+import com.github.stefanosansone.intellijtargetprocessintegration.services.TargetProcessProjectService
 import com.github.stefanosansone.intellijtargetprocessintegration.ui.panels.DetailPanel
 import com.github.stefanosansone.intellijtargetprocessintegration.ui.panels.getAssignablesList
 import com.github.stefanosansone.intellijtargetprocessintegration.ui.settings.TargetProcessSettingsConfigurable
+import com.github.stefanosansone.intellijtargetprocessintegration.utils.TargetProcessProjectService
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.ActionGroup
 import com.intellij.openapi.actionSystem.ActionManager
@@ -42,34 +42,34 @@ class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
     private val assignables = mutableListOf<Assignables.Item>()
 
     override fun init(toolWindow: ToolWindow) {
-        val bus = ApplicationManager.getApplication().messageBus.connect(toolWindow.disposable)
-        bus.subscribe(
-            TargetProcessSettingsConfigurable.Util.SETTINGS_CHANGED,
-            object : TargetProcessSettingsConfigurable.SettingsChangedListener {
-                override fun settingsChanged() {
-                    createToolWindowContent(toolWindow.project, toolWindow)
-                }
-            })
-        refreshAssignablesData(toolWindow)
-    }
+        val project = toolWindow.project
+        val service = project.TargetProcessProjectService
+        val bus = project.messageBus.connect()
 
-    fun refreshAssignablesData(toolWindow: ToolWindow) {
-        scope.launch {
-            try {
-                assignables.clear()
-                assignables.addAll(TargetProcessRepository.getAssignables())
+        bus.subscribe(TargetProcessSettingsConfigurable.Util.SETTINGS_CHANGED, object : TargetProcessSettingsConfigurable.SettingsChangedListener {
+            override fun settingsChanged() {
+                service.reloadClient()
                 ApplicationManager.getApplication().invokeLater {
-                    createToolWindowContent(toolWindow.project, toolWindow)
+                    createToolWindowContent(project, toolWindow)
                 }
-            } catch (e: Exception) {
-                // Handle any errors (e.g., show an error message in the tool window)
+            }
+        })
+
+        scope.launch {
+            service.assignablesStateFlow.collect { assignables ->
+                ApplicationManager.getApplication().invokeLater {
+                    toolWindow.contentManager.removeAllContents(true)
+                    val myToolWindowPanel = TargetProcessToolWindow(assignables)
+                    val content = ContentFactory.getInstance().createContent(myToolWindowPanel.getContent(), "My Items", false)
+                    toolWindow.contentManager.addContent(content)
+                }
             }
         }
     }
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
         val disposable = Disposer.newDisposable("MyItems tab disposable")
-        val service = toolWindow.project.service<TargetProcessIntegrationService>()
+        val service = toolWindow.project.service<TargetProcessProjectService>()
         Disposer.register(toolWindow.disposable, disposable)
         toolWindow.contentManager.removeAllContents(true)
         if (service.getAccessToken().isEmpty()) {
@@ -121,8 +121,6 @@ class TargetProcessToolWindow(assignables: List<Assignables.Item>) {
         border = CompoundBorder(line, empty())
     }
 
-
-
     private val detailPanel = DetailPanel()
 
     private val detailSplitter = OnePixelSplitter(false).apply {
@@ -141,7 +139,6 @@ class TargetProcessToolWindow(assignables: List<Assignables.Item>) {
         firstComponent = listPanel
         secondComponent = detailSplitter
     }
-
 
     private fun showItemDetails(description: String?) {
         description?.let {

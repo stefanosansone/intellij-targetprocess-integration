@@ -1,7 +1,8 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.ui.panels
 
-import com.github.stefanosansone.intellijtargetprocessintegration.util.isMarkdown
-import com.github.stefanosansone.intellijtargetprocessintegration.util.markdownToHtml
+import com.github.stefanosansone.intellijtargetprocessintegration.utils.convertImagesToTextLinks
+import com.github.stefanosansone.intellijtargetprocessintegration.utils.isMarkdown
+import com.github.stefanosansone.intellijtargetprocessintegration.utils.markdownToHtml
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.util.ui.HtmlPanel
 import com.intellij.util.ui.JBUI
@@ -40,7 +41,7 @@ private class DescriptionPanel : HtmlPanel() {
     }
 
     fun updateDescription(text: String) {
-        description = (if (isMarkdown(text)) markdownToHtml(text) else text)
+        description = (if (isMarkdown(text)) markdownToHtml(text) else convertImagesToTextLinks(text))
         update()
     }
 

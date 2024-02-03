@@ -1,4 +1,4 @@
-package com.github.stefanosansone.intellijtargetprocessintegration.util
+package com.github.stefanosansone.intellijtargetprocessintegration.utils
 
 fun String.removeUrlPrefix(): String {
     val prefixes = listOf("https://", "http://")

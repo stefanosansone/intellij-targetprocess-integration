@@ -1,9 +1,9 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.ui.settings
 
 import com.github.stefanosansone.intellijtargetprocessintegration.TargetProcessIntegrationBundle
-import com.github.stefanosansone.intellijtargetprocessintegration.util.isAccessTokenValid
-import com.github.stefanosansone.intellijtargetprocessintegration.util.isValidUrl
-import com.github.stefanosansone.intellijtargetprocessintegration.util.removeUrlPrefix
+import com.github.stefanosansone.intellijtargetprocessintegration.utils.isAccessTokenValid
+import com.github.stefanosansone.intellijtargetprocessintegration.utils.isValidUrl
+import com.github.stefanosansone.intellijtargetprocessintegration.utils.removeUrlPrefix
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.dsl.builder.*
 

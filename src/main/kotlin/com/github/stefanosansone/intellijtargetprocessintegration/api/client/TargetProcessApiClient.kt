@@ -1,4 +1,4 @@
-package com.github.stefanosansone.intellijtargetprocessintegration.api
+package com.github.stefanosansone.intellijtargetprocessintegration.api.client
 
 import com.github.stefanosansone.intellijtargetprocessintegration.api.model.Assignables
 import com.github.stefanosansone.intellijtargetprocessintegration.ui.settings.TargetProcessSettingsState
@@ -15,11 +15,14 @@ import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 
 const val API_PATH = "api/v2"
-class KtorClient: TargetProcessClient {
-    private val apiHost = TargetProcessSettingsState.instance.pluginState.targetProcessHostname
-    private val accessToken = TargetProcessSettingsState.instance.pluginState.targetProcessAccessToken
+class TargetProcessApiClient: TargetProcessApi {
 
-    private val client = HttpClient(CIO) {
+    private var apiHost = TargetProcessSettingsState.instance.pluginState.targetProcessHostname
+    private var accessToken = TargetProcessSettingsState.instance.pluginState.targetProcessAccessToken
+
+    private var client = createClient()
+
+    private fun createClient() = HttpClient(CIO) {
         install(Resources)
         install(ContentNegotiation) {
             json(Json {
@@ -43,9 +46,15 @@ class KtorClient: TargetProcessClient {
         }
     }
 
-    override suspend fun assignables(): Assignables {
+    fun reloadClientConfiguration() {
+        apiHost = TargetProcessSettingsState.instance.pluginState.targetProcessHostname
+        accessToken = TargetProcessSettingsState.instance.pluginState.targetProcessAccessToken
+        client = createClient()
+    }
+
+    override suspend fun getAssignables(): Assignables {
         return client.get {
-            url("${API_PATH}/Assignables/")
+            url("$API_PATH/Assignables/")
             parameter("select","{ResourceType,Name,Id,EntityState,Effort,Tags,AssignedUser,Description}")
             parameter("take","1000")
             parameter("filter","?AssignedUser.Where(it is Me)")

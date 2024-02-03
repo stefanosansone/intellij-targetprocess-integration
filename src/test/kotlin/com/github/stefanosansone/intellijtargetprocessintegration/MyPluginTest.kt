@@ -1,6 +1,6 @@
 package com.github.stefanosansone.intellijtargetprocessintegration
 
-import com.github.stefanosansone.intellijtargetprocessintegration.services.TargetProcessIntegrationService
+import com.github.stefanosansone.intellijtargetprocessintegration.services.TargetProcessProjectService
 import com.intellij.ide.highlighter.XmlFileType
 import com.intellij.openapi.components.service
 import com.intellij.psi.xml.XmlFile
@@ -30,7 +30,7 @@ class MyPluginTest : BasePlatformTestCase() {
     }*/
 
     fun testProjectService() {
-        val projectService = project.service<TargetProcessIntegrationService>()
+        val projectService = project.service<TargetProcessProjectService>()
 
         assertNotSame(projectService.getAccessToken(), projectService.getAccessToken() + "A")
     }
