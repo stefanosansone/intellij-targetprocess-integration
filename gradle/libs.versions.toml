@@ -4,6 +4,7 @@ annotations = "24.1.0"
 ktor = "2.3.8"
 markdown = "0.6.1"
 marketplaceZipSigner = "0.1.24"
+datetime = "0.5.0"
 
 # plugins
 kotlin = "1.9.22"
@@ -23,7 +24,7 @@ ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-conte
 ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 intellij-markdown = { group = "org.jetbrains", name = "markdown", version.ref = "markdown" }
 marketplace-zip-signer = { group = "org.jetbrains", name = "marketplace-zip-signer", version.ref = "marketplaceZipSigner" }
-
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "datetime" }
 
 [plugins]
 changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }

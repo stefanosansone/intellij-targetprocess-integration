@@ -16,6 +16,7 @@ plugins {
 
 configurations.all {
     exclude("org.slf4j", "slf4j-api")
+    exclude("org.jetbrains", "markdown")
 }
 
 group = properties("pluginGroup").get()
@@ -35,6 +36,7 @@ dependencies {
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.intellij.markdown)
     implementation(libs.marketplace.zip.signer)
+    implementation(libs.kotlinx.datetime)
 }
 
 kotlin {
