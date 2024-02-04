@@ -1,8 +1,9 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.ui.toolWindow
 
 import com.github.stefanosansone.intellijtargetprocessintegration.api.model.Assignables
-import com.github.stefanosansone.intellijtargetprocessintegration.services.TargetProcessProjectService
+import com.github.stefanosansone.intellijtargetprocessintegration.services.AssignablesState
 import com.github.stefanosansone.intellijtargetprocessintegration.ui.panels.DetailPanel
+import com.github.stefanosansone.intellijtargetprocessintegration.ui.panels.InfoPanel
 import com.github.stefanosansone.intellijtargetprocessintegration.ui.panels.getAssignablesList
 import com.github.stefanosansone.intellijtargetprocessintegration.ui.settings.TargetProcessSettingsConfigurable
 import com.github.stefanosansone.intellijtargetprocessintegration.utils.TargetProcessProjectService
@@ -12,7 +13,6 @@ import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.ex.ActionUtil
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.components.service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
@@ -39,7 +39,7 @@ import javax.swing.border.CompoundBorder
 class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
 
     private val scope = CoroutineScope(SupervisorJob())
-    private val assignables = mutableListOf<Assignables.Item>()
+    private var assignables = mutableListOf<Assignables.Item>()
 
     override fun init(toolWindow: ToolWindow) {
         val project = toolWindow.project
@@ -50,46 +50,54 @@ class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
             override fun settingsChanged() {
                 service.reloadClient()
                 ApplicationManager.getApplication().invokeLater {
-                    createToolWindowContent(project, toolWindow)
+                    updateToolWindowContent(toolWindow, AssignablesState.Loading)
                 }
             }
         })
 
         scope.launch {
-            service.assignablesStateFlow.collect { assignables ->
+            service.assignablesStateFlow.collect { state ->
                 ApplicationManager.getApplication().invokeLater {
-                    toolWindow.contentManager.removeAllContents(true)
-                    val myToolWindowPanel = TargetProcessToolWindow(assignables)
-                    val content = ContentFactory.getInstance().createContent(myToolWindowPanel.getContent(), "My Items", false)
-                    toolWindow.contentManager.addContent(content)
+                    updateToolWindowContent(toolWindow, state)
                 }
             }
         }
     }
 
+
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        val disposable = Disposer.newDisposable("MyItems tab disposable")
-        val service = toolWindow.project.service<TargetProcessProjectService>()
-        Disposer.register(toolWindow.disposable, disposable)
+        // Nothing
+    }
+
+    private fun updateToolWindowContent(toolWindow: ToolWindow, state: AssignablesState) {
+        val disposable = Disposer.newDisposable().also {
+            Disposer.register(toolWindow.disposable, it)
+        }
         toolWindow.contentManager.removeAllContents(true)
-        if (service.getAccessToken().isEmpty()) {
-            noAccountPanel(disposable, toolWindow)
-        } else {
-            val myToolWindow = TargetProcessToolWindow(assignables)
-            val content = ContentFactory.getInstance().createContent(myToolWindow.getContent(), "My Items", false)
-            toolWindow.contentManager.addContent(content)
+
+        when (state) {
+            is AssignablesState.Loading -> messagePanel(disposable, toolWindow, "Loading data...", false)
+            is AssignablesState.Success -> {
+                assignables.addAll(state.items)
+                val myToolWindow = TargetProcessToolWindow(assignables)
+                val content = ContentFactory.getInstance().createContent(myToolWindow.getContent(), "My Items", false)
+                toolWindow.contentManager.addContent(content)
+            }
+            is AssignablesState.Error -> messagePanel(disposable, toolWindow, state.error.localizedMessage ?: "Error fetching data. Check settings.", true)
         }
     }
 
-    private fun noAccountPanel(
+    private fun messagePanel(
         disposable: Disposable,
-        toolWindow: ToolWindow
+        toolWindow: ToolWindow,
+        message: String,
+        showSettingsButton: Boolean
     ) = with(toolWindow.contentManager) {
         thisLogger().debug("No TargetProcess account configured")
         val emptyTextPanel = JBPanelWithEmptyText()
-        emptyTextPanel.emptyText
-            .appendText("Target Process access token not configured")
-            .appendLine(
+        emptyTextPanel.emptyText.appendText(message)
+        if (showSettingsButton){
+            emptyTextPanel.emptyText.appendLine(
                 "Go to TargetProcess settings",
                 SimpleTextAttributes.LINK_ATTRIBUTES,
                 ActionUtil.createActionListener(
@@ -98,6 +106,7 @@ class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
                     ActionPlaces.UNKNOWN
                 )
             )
+        }
         addContent(factory.createContent(emptyTextPanel, "My Items", false)
             .apply {
                 isCloseable = false
@@ -113,8 +122,8 @@ class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
 class TargetProcessToolWindow(assignables: List<Assignables.Item>) {
 
     private val listPanel = JBScrollPane(
-        getAssignablesList(assignables) { description ->
-            showItemDetails(description)
+        getAssignablesList(assignables) { item ->
+            showItemDetails(item)
         }
     ).apply {
         val line: Border = CustomLineBorder(OnePixelDivider.BACKGROUND, 0, 1, 0, 0)
@@ -124,7 +133,7 @@ class TargetProcessToolWindow(assignables: List<Assignables.Item>) {
     private val detailPanel = DetailPanel()
 
     private val detailSplitter = OnePixelSplitter(false).apply {
-        proportion = 0.75F
+        proportion = 0.70F
         val emptyDescriptionPanel = JBPanelWithEmptyText()
         emptyDescriptionPanel.emptyText.appendText("Select an entity to show description")
         firstComponent = emptyDescriptionPanel
@@ -140,10 +149,12 @@ class TargetProcessToolWindow(assignables: List<Assignables.Item>) {
         secondComponent = detailSplitter
     }
 
-    private fun showItemDetails(description: String?) {
+    private fun showItemDetails(item: Assignables.Item) {
+        val description = item.description
         description?.let {
             detailPanel.updateDescription(description)
             detailSplitter.firstComponent = detailPanel
+            detailSplitter.secondComponent = InfoPanel(item)
             detailPanel.revalidate()
             detailPanel.repaint()
         } ?: run {

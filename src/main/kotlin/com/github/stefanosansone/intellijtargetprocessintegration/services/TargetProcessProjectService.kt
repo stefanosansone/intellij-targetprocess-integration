@@ -3,29 +3,24 @@ package com.github.stefanosansone.intellijtargetprocessintegration.services
 import com.github.stefanosansone.intellijtargetprocessintegration.TargetProcessIntegrationBundle
 import com.github.stefanosansone.intellijtargetprocessintegration.api.client.TargetProcessApiClient
 import com.github.stefanosansone.intellijtargetprocessintegration.api.model.Assignables
-import com.github.stefanosansone.intellijtargetprocessintegration.core.extensions.AssignablesContext
-import com.github.stefanosansone.intellijtargetprocessintegration.ui.settings.TargetProcessSettingsConfigurable
+import com.github.stefanosansone.intellijtargetprocessintegration.core.extensions.ProjectContext
 import com.github.stefanosansone.intellijtargetprocessintegration.ui.settings.TargetProcessSettingsState
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger
-import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.Messages
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 @Service(Service.Level.PROJECT)
-class TargetProcessProjectService(override val project: Project) : AssignablesContext, Disposable {
+class TargetProcessProjectService(override val project: Project) : ProjectContext, Disposable {
 
     override val coroutineScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    private val _assignablesStateFlow = MutableStateFlow<List<Assignables.Item>>(emptyList())
-    val assignablesStateFlow: StateFlow<List<Assignables.Item>> = _assignablesStateFlow.asStateFlow()
-
-    override val assignables = _assignablesStateFlow.asStateFlow().value
+    private val _assignablesStateFlow = MutableStateFlow<AssignablesState>(AssignablesState.Loading)
+    val assignablesStateFlow: StateFlow<AssignablesState> = _assignablesStateFlow.asStateFlow()
 
     private val client = TargetProcessApiClient()
 
@@ -36,11 +31,13 @@ class TargetProcessProjectService(override val project: Project) : AssignablesCo
 
     fun refreshAssignables() {
         coroutineScope.launch {
+            _assignablesStateFlow.value = AssignablesState.Loading
             try {
                 val assignablesList = getAssignables()
-                _assignablesStateFlow.value = assignablesList
+                _assignablesStateFlow.value = AssignablesState.Success(assignablesList)
             } catch (e: Exception) {
-                showErrorDialogWithSettingsOption(e, project)
+                _assignablesStateFlow.value = AssignablesState.Error(e)
+                thisLogger().warn(e)
             }
         }
     }
@@ -61,14 +58,8 @@ class TargetProcessProjectService(override val project: Project) : AssignablesCo
     }
 }
 
-
-private fun showErrorDialogWithSettingsOption(e: Exception, project: Project) {
-    // Constructing the message and showing the dialog should be done on the UI thread
-    Messages.showErrorDialog(
-            project,
-            "Failed to fetch data from the specified address. Please check your settings. Error: ${e.localizedMessage}",
-            "Error Fetching Data"
-    )
-    // Optionally, direct the user to the settings dialog
-    ShowSettingsUtil.getInstance().showSettingsDialog(project, TargetProcessSettingsConfigurable::class.java)
+sealed class AssignablesState {
+    object Loading : AssignablesState()
+    data class Success(val items: List<Assignables.Item>) : AssignablesState()
+    data class Error(val error: Throwable) : AssignablesState()
 }

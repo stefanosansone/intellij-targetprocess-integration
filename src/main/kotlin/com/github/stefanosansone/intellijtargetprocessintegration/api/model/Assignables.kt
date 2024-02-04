@@ -15,7 +15,12 @@ data class Assignables(
         val name: String,
         val resourceType: String,
         val description: String? = null,
-        val tags: String
+        val tags: String,
+        val project: Project,
+        val creator: Creator,
+        val feature: Feature? = null,
+        val teamIteration: TeamIteration? = null,
+        val createDate: String
     ){
         @Serializable
         data class AssignedUser(
@@ -41,4 +46,35 @@ data class Assignables(
             val resourceType: String
         )
     }
+
+    @Serializable
+    data class Project(
+        val id: Int,
+        val name: String,
+        val resourceType: String
+    )
+
+    @Serializable
+    data class Creator(
+        val firstName: String,
+        val fullName: String,
+        val id: Int,
+        val lastName: String,
+        val login: String,
+        val resourceType: String
+    )
+
+    @Serializable
+    data class Feature(
+        val id: Int,
+        val name: String,
+        val resourceType: String
+    )
+
+    @Serializable
+    data class TeamIteration(
+        val id: Int,
+        val name: String,
+        val resourceType: String
+    )
 }
