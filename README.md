@@ -13,7 +13,7 @@
 This plugin integrates TargetProcess into your JetBrains IDE, enabling you to view tasks and track activities without having to leave your development environment.
 <!-- Plugin description end -->
 
-<!--
+
 ## Installation
 
 - Using the IDE built-in plugin system:
@@ -25,7 +25,6 @@ This plugin integrates TargetProcess into your JetBrains IDE, enabling you to vi
 
   Download the [latest release](https://github.com/stefanosansone/intellij-targetprocess-integration/releases/latest) and install it manually using
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
--->
 ## License
 
     Copyright 2023 Stefano Sansone
