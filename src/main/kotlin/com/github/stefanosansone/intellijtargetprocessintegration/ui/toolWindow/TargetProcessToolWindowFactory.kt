@@ -91,17 +91,26 @@ class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
         disposable: Disposable,
         toolWindow: ToolWindow,
         message: String,
-        showSettingsButton: Boolean
+        showButtons: Boolean
     ) = with(toolWindow.contentManager) {
         thisLogger().debug("No TargetProcess account configured")
         val emptyTextPanel = JBPanelWithEmptyText()
         emptyTextPanel.emptyText.appendText(message)
-        if (showSettingsButton){
+        if (showButtons){
             emptyTextPanel.emptyText.appendLine(
                 "Go to TargetProcess settings",
                 SimpleTextAttributes.LINK_ATTRIBUTES,
                 ActionUtil.createActionListener(
                     "ShowTargetProcessSettings",
+                    emptyTextPanel,
+                    ActionPlaces.UNKNOWN
+                )
+            )
+            emptyTextPanel.emptyText.appendLine(
+                "Refresh",
+                SimpleTextAttributes.LINK_ATTRIBUTES,
+                ActionUtil.createActionListener(
+                    "ReloadAssignablesAction",
                     emptyTextPanel,
                     ActionPlaces.UNKNOWN
                 )

@@ -45,11 +45,10 @@
         </action>
 
         <group id="TPIntegration.ActionGroup" popup="false">
-            <action id="Github.Workflow.List.Reload"
+            <action id="ReloadAssignablesAction"
                     class="com.github.stefanosansone.intellijtargetprocessintegration.actions.ReloadAssignablesAction"
                     use-shortcut-of="Refresh"/>
             <action
-                    id="Github.Actions.Manager.Settings.Open"
                     class="com.github.stefanosansone.intellijtargetprocessintegration.actions.ShowPluginSettingsAction"
                     icon="AllIcons.General.Settings"/>
         </group>
