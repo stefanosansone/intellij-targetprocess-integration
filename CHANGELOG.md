@@ -17,5 +17,6 @@
 - Increase until build
 - Add create date parsing in Info panel
 
-[Unreleased]: https://github.com/stefanosansone/intellij-targetprocess-integration/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/stefanosansone/intellij-targetprocess-integration/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/stefanosansone/intellij-targetprocess-integration/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/stefanosansone/intellij-targetprocess-integration/commits/v0.1.1
