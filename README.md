@@ -1,12 +1,10 @@
+![Build](https://github.com/stefanosansone/intellij-targetprocess-integration/workflows/Build/badge.svg)
+[![Version](https://img.shields.io/jetbrains/plugin/v/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/23710-targetprocess-integrationn)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/23710-targetprocess-integration)
+
 # Intellij TargetProcess Integration Plugin
 
-> [!WARNING]
->
-> Work in progress.
-
-![Build](https://github.com/stefanosansone/intellij-targetprocess-integration/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/com.github.stefanosansone.intellijtargetprocessintegration)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/com.github.stefanosansone.intellijtargetprocessintegration)
+<img alt="TargetProcess logo" src="src/main/resources/META-INF/pluginIcon.svg" width="20%"/>
 
 ## Overview
 <!-- Plugin description -->
@@ -24,6 +22,7 @@ This plugin seamlessly integrates TargetProcess, a popular Agile project managem
 
   Download the [latest release](https://github.com/stefanosansone/intellij-targetprocess-integration/releases/latest) and install it manually using
   <kbd>Settings/Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
+
 ## License
 
     Copyright 2023 Stefano Sansone
