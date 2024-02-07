@@ -26,7 +26,8 @@ fun settingsPanel(
                                 else -> null
                             }
                         }
-                        .align(AlignX.FILL)
+                        .columns(COLUMNS_LARGE)
+                        .align(AlignX.LEFT)
                         .comment("<font color=\"#DFE1E5\"><i>Example: https://myaccount.tpondemand.com</i></font>")
                 }
             }
@@ -47,9 +48,8 @@ fun settingsPanel(
                 row("TargetProcess access token:") {
                     passwordField()
                         .bindText(settingsState::targetProcessAccessToken)
-                        .align(AlignX.FILL)
-                        .resizableColumn()
-                        .resizableColumn()
+                        .columns(COLUMNS_LARGE)
+                        .align(AlignX.LEFT)
                         .validationOnApply {
                             when {
                                 !isAccessTokenValid(it.text) && it.text.isNotEmpty() -> error("Access Token format not valid")
@@ -62,7 +62,10 @@ fun settingsPanel(
         }
         group("Feedback") {
             row {
-                browserLink("Send feedback about TargetProcess Integration", "https://stefanosansone.dev")
+                browserLink("Report an issue", "https://github.com/stefanosansone/intellij-targetprocess-integration/issues")
+            }
+            row {
+                browserLink("Send feedback about TargetProcess Integration", "mailto:stefanosansone.dev@gmail.com?subject=TargetProcess%20IntelliJ%20Plugin%20Feedback")
             }
         }
     }
