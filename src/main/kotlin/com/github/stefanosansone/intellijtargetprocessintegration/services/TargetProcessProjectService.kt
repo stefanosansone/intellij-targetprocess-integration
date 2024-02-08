@@ -32,6 +32,16 @@ class TargetProcessProjectService(override val project: Project) : ProjectContex
     fun refreshAssignables() {
         coroutineScope.launch {
             _assignablesStateFlow.value = AssignablesState.Loading
+
+            val settings = TargetProcessSettingsState.instance.state
+            if (settings.targetProcessHostname.isBlank()) {
+                _assignablesStateFlow.value = AssignablesState.MissingHostname
+                return@launch
+            }
+            if (settings.targetProcessAccessToken.isBlank()) {
+                _assignablesStateFlow.value = AssignablesState.MissingAccessToken
+                return@launch
+            }
             try {
                 val assignablesList = getAssignables()
                 _assignablesStateFlow.value = AssignablesState.Success(assignablesList)
@@ -62,4 +72,6 @@ sealed class AssignablesState {
     object Loading : AssignablesState()
     data class Success(val items: List<Assignables.Item>) : AssignablesState()
     data class Error(val error: Throwable) : AssignablesState()
+    object MissingHostname: AssignablesState()
+    object MissingAccessToken: AssignablesState()
 }

@@ -10,7 +10,8 @@
 
 - Fix TargetProcess url formatting in settings
 - Fix ToolWindow naming
-
+- Fix ToolWindow reloading
+- 
 ## [0.2.0] - 2024-02-07
 
 ### Fixed

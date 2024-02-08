@@ -1,5 +1,6 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.ui.toolWindow
 
+
 import com.github.stefanosansone.intellijtargetprocessintegration.api.model.Assignables
 import com.github.stefanosansone.intellijtargetprocessintegration.services.AssignablesState
 import com.github.stefanosansone.intellijtargetprocessintegration.ui.panels.DetailPanel
@@ -7,17 +8,14 @@ import com.github.stefanosansone.intellijtargetprocessintegration.ui.panels.Info
 import com.github.stefanosansone.intellijtargetprocessintegration.ui.panels.getAssignablesList
 import com.github.stefanosansone.intellijtargetprocessintegration.ui.settings.TargetProcessSettingsConfigurable
 import com.github.stefanosansone.intellijtargetprocessintegration.utils.TargetProcessProjectService
-import com.intellij.openapi.Disposable
 import com.intellij.openapi.actionSystem.ActionGroup
 import com.intellij.openapi.actionSystem.ActionManager
 import com.intellij.openapi.actionSystem.ActionPlaces
 import com.intellij.openapi.actionSystem.ex.ActionUtil
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.OnePixelDivider
-import com.intellij.openapi.util.Disposer
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.OnePixelSplitter
@@ -35,11 +33,9 @@ import java.awt.BorderLayout
 import javax.swing.border.Border
 import javax.swing.border.CompoundBorder
 
-
 class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
 
     private val scope = CoroutineScope(SupervisorJob())
-    private var assignables = mutableListOf<Assignables.Item>()
 
     override fun init(toolWindow: ToolWindow) {
         val project = toolWindow.project
@@ -59,69 +55,59 @@ class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
 
         scope.launch {
             service.assignablesStateFlow.collect { state ->
-                ApplicationManager.getApplication().invokeLater {
-                    updateToolWindowContent(toolWindow, state)
-                }
+                updateToolWindowContent(toolWindow, state)
             }
         }
     }
 
-
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        // Nothing
+        //  No direct content setup needed here
     }
 
     private fun updateToolWindowContent(toolWindow: ToolWindow, state: AssignablesState) {
-        val disposable = Disposer.newDisposable().also {
-            Disposer.register(toolWindow.disposable, it)
-        }
-        toolWindow.contentManager.removeAllContents(true)
+        ApplicationManager.getApplication().invokeLater {
+            toolWindow.contentManager.removeAllContents(true)
 
-        when (state) {
-            is AssignablesState.Loading -> messagePanel(disposable, toolWindow, "Loading data...", false)
-            is AssignablesState.Success -> {
-                assignables.addAll(state.items)
-                val myToolWindow = TargetProcessToolWindow(assignables)
-                val content = ContentFactory.getInstance().createContent(myToolWindow.getContent(), "My Items", false)
-                toolWindow.contentManager.addContent(content)
+            when (state) {
+                is AssignablesState.Loading -> displayMessagePanel(toolWindow, "Loading...")
+                is AssignablesState.Success -> displayAssignables(toolWindow, state.items)
+                is AssignablesState.MissingHostname -> displayMessagePanel(toolWindow, "Hostname missing!")
+                is AssignablesState.MissingAccessToken -> displayMessagePanel(toolWindow, "Access token missing!")
+                is AssignablesState.Error -> displayMessagePanel(toolWindow, "Error: ${state.error.message}")
             }
-
-            is AssignablesState.Error -> messagePanel(
-                disposable,
-                toolWindow,
-                state.error.localizedMessage ?: "Error fetching data. Check settings.",
-                true
-            )
         }
     }
 
-    private fun messagePanel(
-        disposable: Disposable, toolWindow: ToolWindow, message: String, showButtons: Boolean
-    ) = with(toolWindow.contentManager) {
-        thisLogger().debug("No TargetProcess account configured")
-        val emptyTextPanel = JBPanelWithEmptyText()
-        emptyTextPanel.emptyText.appendText("Configuration error - check settings")
-        if (showButtons) {
-            emptyTextPanel.emptyText.appendLine(
-                "Go to TargetProcess settings", SimpleTextAttributes.LINK_ATTRIBUTES, ActionUtil.createActionListener(
-                    "ShowPluginSettingsAction", emptyTextPanel, ActionPlaces.UNKNOWN
-                )
+    private fun displayMessagePanel(toolWindow: ToolWindow, message: String) {
+        toolWindow.contentManager.addContent(
+            ContentFactory.getInstance().createContent(
+                createInformativePanel(message), "My Items", false
             )
-            emptyTextPanel.emptyText.appendLine(
-                "Refresh", SimpleTextAttributes.LINK_ATTRIBUTES, ActionUtil.createActionListener(
-                    "ReloadAssignablesAction", emptyTextPanel, ActionPlaces.UNKNOWN
-                )
-            )
+        )
+    }
+
+    private fun createInformativePanel(message: String): JBPanelWithEmptyText {
+        val panel = JBPanelWithEmptyText()
+        panel.emptyText.appendText(message)
+        if (!message.contains("loading", ignoreCase = true)) {
+            panel.emptyText.appendLine("Check TargetProcess settings.", SimpleTextAttributes.LINK_ATTRIBUTES, ActionUtil.createActionListener(
+                "ShowPluginSettingsAction", panel, ActionPlaces.UNKNOWN
+            ))
         }
-        addContent(factory.createContent(emptyTextPanel, "My Items", false).apply {
-                isCloseable = false
-                setDisposer(disposable)
-            })
+        return panel
+    }
+
+    private fun displayAssignables(toolWindow: ToolWindow, assignables: List<Assignables.Item>) {
+        toolWindow.contentManager.addContent(
+            ContentFactory.getInstance().createContent(
+                TargetProcessToolWindow(assignables).getContent(), "My Items", false
+            )
+        )
     }
 
     override fun shouldBeAvailable(project: Project) = true
-
 }
+
 
 class TargetProcessToolWindow(assignables: List<Assignables.Item>) {
 
