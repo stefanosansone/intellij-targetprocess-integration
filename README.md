@@ -1,6 +1,6 @@
 ![Build](https://github.com/stefanosansone/intellij-targetprocess-integration/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/23710-targetprocess-integrationn)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/23710-targetprocess-integration)
+[![Version](https://img.shields.io/jetbrains/plugin/v/com.github.stefanosansone.intellijtargetprocessintegration.svg)](https://plugins.jetbrains.com/plugin/23710-targetprocess-integrationn)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/com.github.stefanosansone.intellijtargetprocessintegration.svg)](https://plugins.jetbrains.com/plugin/23710-targetprocess-integration)
 
 # Intellij TargetProcess Integration Plugin
 
@@ -48,4 +48,3 @@ and uses the [IntelliJ Platform UI Guidelines][ui].
 
 [template]: https://github.com/JetBrains/intellij-platform-plugin-template
 [ui]: https://jetbrains.github.io/ui/
-[targetprocess]: https://www.apptio.com/products/targetprocess/
