@@ -1,13 +1,9 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.utils
 
-fun String.removeUrlPrefix(): String {
-    val prefixes = listOf("https://", "http://")
-    for (prefix in prefixes) {
-        if (this.startsWith(prefix)) {
-            return this.removePrefix(prefix)
-        }
-    }
-    return this
+fun String.formatUrl(): String {
+    return this.removePrefix("http://")
+        .removePrefix("https://")
+        .removeSuffix("/")
 }
 
 fun String.isValidUrl(): Boolean {

@@ -1,9 +1,7 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.ui.settings
 
 import com.github.stefanosansone.intellijtargetprocessintegration.TargetProcessIntegrationBundle
-import com.github.stefanosansone.intellijtargetprocessintegration.utils.isAccessTokenValid
-import com.github.stefanosansone.intellijtargetprocessintegration.utils.isValidUrl
-import com.github.stefanosansone.intellijtargetprocessintegration.utils.removeUrlPrefix
+import com.github.stefanosansone.intellijtargetprocessintegration.utils.*
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.ui.dsl.builder.*
 
@@ -20,7 +18,7 @@ fun settingsPanel(
                         .bindText(settingsState::targetProcessHostname)
                         .text(existingHostname)
                         .validationOnApply {
-                            it.text = it.text.removeUrlPrefix()
+                            it.text = it.text.formatUrl()
                             when {
                                 it.text.isNotEmpty() && !it.text.isValidUrl() -> error(TargetProcessIntegrationBundle.message("tps.settings.configuration.hostname.error.invalid"))
                                 else -> null
@@ -38,8 +36,8 @@ fun settingsPanel(
             }.bottomGap(BottomGap.SMALL)
             row { text(TargetProcessIntegrationBundle.message("tps.settings.token.steps.one")) }
             row { text(TargetProcessIntegrationBundle.message("tps.settings.token.steps.two")) }
-            row { text("3. Select your account name from the drop-down menu under your account avatar.") }
-            row { text("4. Select the 'Access Tokens' tab.") }
+            row { text(TargetProcessIntegrationBundle.message("tps.settings.token.steps.three")) }
+            row { text(TargetProcessIntegrationBundle.message("tps.settings.token.steps.four")) }
             row { text("5. Click the '+ Add token' button.") }
             row { text("6. In the text field, type a name to identify this token.") }
             row { text("7. Press 'Create'. This will generate a new token.") }
@@ -52,7 +50,7 @@ fun settingsPanel(
                         .align(AlignX.LEFT)
                         .validationOnApply {
                             when {
-                                !isAccessTokenValid(it.text) && it.text.isNotEmpty() -> error("Access Token format not valid")
+                                !isAccessTokenValid(it.password.concatToString()) && it.password.concatToString().isNotEmpty() -> error("Access Token format not valid")
                                 else -> null
                             }
                         }
@@ -60,12 +58,12 @@ fun settingsPanel(
                 }
             }
         }
-        group("Feedback") {
+        group(TargetProcessIntegrationBundle.message("tps.settings.feedback.title")) {
             row {
-                browserLink("Report an issue", "https://github.com/stefanosansone/intellij-targetprocess-integration/issues")
+                browserLink(TargetProcessIntegrationBundle.message("tps.settings.feedback.issue"), GITHUB_ISSUES_URL)
             }
             row {
-                browserLink("Send feedback about TargetProcess Integration", "mailto:stefanosansone.dev@gmail.com?subject=TargetProcess%20IntelliJ%20Plugin%20Feedback")
+                browserLink(TargetProcessIntegrationBundle.message("tps.settings.feedback.send"), FEEDBACK_MAIL)
             }
         }
     }
