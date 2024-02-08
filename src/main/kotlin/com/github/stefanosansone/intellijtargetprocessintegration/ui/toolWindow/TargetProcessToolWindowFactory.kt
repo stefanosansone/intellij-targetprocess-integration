@@ -100,11 +100,11 @@ class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
     ) = with(toolWindow.contentManager) {
         thisLogger().debug("No TargetProcess account configured")
         val emptyTextPanel = JBPanelWithEmptyText()
-        emptyTextPanel.emptyText.appendText(message)
+        emptyTextPanel.emptyText.appendText("Configuration error - check settings")
         if (showButtons) {
             emptyTextPanel.emptyText.appendLine(
                 "Go to TargetProcess settings", SimpleTextAttributes.LINK_ATTRIBUTES, ActionUtil.createActionListener(
-                    "ShowTargetProcessSettings", emptyTextPanel, ActionPlaces.UNKNOWN
+                    "ShowPluginSettingsAction", emptyTextPanel, ActionPlaces.UNKNOWN
                 )
             )
             emptyTextPanel.emptyText.appendLine(

@@ -9,7 +9,7 @@ import com.intellij.openapi.wm.ToolWindowManager
 class ReloadAssignablesAction : RefreshAction("Refresh", null, AllIcons.Actions.Refresh) {
 
     override fun update(e: AnActionEvent) {
-        val context = e.project?.let { ToolWindowManager.getInstance(it).getToolWindow("Target Process") }
+        val context = e.project?.let { ToolWindowManager.getInstance(it).getToolWindow("TargetProcess") }
         e.presentation.isEnabled = context != null
     }
 

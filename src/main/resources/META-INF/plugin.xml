@@ -13,7 +13,7 @@
         <projectConfigurable
                 parentId="tools"
                 id="tpi.project.settings"
-                displayName="Target Process Integration"
+                displayName="TargetProcess Integration"
                 nonDefaultProject="true"
                 instance="com.github.stefanosansone.intellijtargetprocessintegration.ui.settings.TargetProcessSettingsConfigurable"/>
 
@@ -22,7 +22,7 @@
 
         <iconMapper mappingFile="TargetProcessIconMappings.json"/>
         <toolWindow
-                id="Target Process"
+                id="TargetProcess"
                 anchor="bottom"
                 factoryClass="com.github.stefanosansone.intellijtargetprocessintegration.ui.toolWindow.TargetProcessToolWindowFactory"
                 icon="com.github.stefanosansone.intellijtargetprocessintegration.ui.icons.TargetProcessIcons.TargetProcessToolWindow"
