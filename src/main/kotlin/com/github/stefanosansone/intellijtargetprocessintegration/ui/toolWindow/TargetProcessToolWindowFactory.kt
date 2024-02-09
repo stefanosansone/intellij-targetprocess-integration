@@ -73,7 +73,9 @@ class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
                 is AssignablesState.Success -> displayAssignables(toolWindow, state.items)
                 is AssignablesState.MissingHostname -> displayMessagePanel(toolWindow, "Hostname missing!")
                 is AssignablesState.MissingAccessToken -> displayMessagePanel(toolWindow, "Access token missing!")
-                is AssignablesState.Error -> displayMessagePanel(toolWindow, "Error: ${state.error.message}")
+                is AssignablesState.NetworkError -> displayMessagePanel(toolWindow, "Error: ${state.error.message}")
+                is AssignablesState.InvalidToken -> displayMessagePanel(toolWindow, "Invalid token.")
+                is AssignablesState.InvalidHostname -> displayMessagePanel(toolWindow, "Invalid hostname.")
             }
         }
     }

@@ -1,15 +1,14 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.api.client
 
-import com.github.stefanosansone.intellijtargetprocessintegration.api.model.Assignables
 import com.github.stefanosansone.intellijtargetprocessintegration.ui.settings.TargetProcessSettingsState
 import io.ktor.client.*
-import io.ktor.client.call.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.plugins.resources.*
 import io.ktor.client.request.*
+import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
@@ -52,12 +51,12 @@ class TargetProcessApiClient: TargetProcessApi {
         client = createClient()
     }
 
-    override suspend fun getAssignables(): Assignables {
+    override suspend fun getAssignables(): HttpResponse {
         return client.get {
             url("$API_PATH/Assignables/")
             parameter("select","{ResourceType,Name,Id,EntityState,Effort,Tags,AssignedUser,Description,Project, Feature,Creator,Release,Iteration,TeamIteration,CreateDate}")
             parameter("take","1000")
             parameter("filter","?AssignedUser.Where(it is Me)")
-        }.body()
+        }
     }
 }

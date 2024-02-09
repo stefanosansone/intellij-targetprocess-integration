@@ -9,6 +9,11 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.project.Project
+import io.ktor.client.call.*
+import io.ktor.client.plugins.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
+import io.ktor.util.network.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -42,12 +47,22 @@ class TargetProcessProjectService(override val project: Project) : ProjectContex
                 _assignablesStateFlow.value = AssignablesState.MissingAccessToken
                 return@launch
             }
+
             try {
                 val assignablesList = getAssignables()
                 _assignablesStateFlow.value = AssignablesState.Success(assignablesList)
+            } catch (e: ClientRequestException) {
+                if (e.response.status == HttpStatusCode.Unauthorized) {
+                    _assignablesStateFlow.value = AssignablesState.InvalidToken
+                } else {
+                    _assignablesStateFlow.value = AssignablesState.NetworkError(e)
+                }
+                thisLogger().warn("getAssignables: ClientRequestException", e)
+            } catch (e: UnresolvedAddressException) {
+                _assignablesStateFlow.value = AssignablesState.InvalidHostname
             } catch (e: Exception) {
-                _assignablesStateFlow.value = AssignablesState.Error(e)
-                thisLogger().warn(e)
+                _assignablesStateFlow.value = AssignablesState.NetworkError(e)
+                thisLogger().warn("getAssignables: General Exception", e)
             }
         }
     }
@@ -58,7 +73,14 @@ class TargetProcessProjectService(override val project: Project) : ProjectContex
     }
 
     private suspend fun getAssignables(): List<Assignables.Item> {
-        return client.getAssignables().items
+        val response = client.getAssignables()
+
+        if (response.status == HttpStatusCode.OK) {
+            return (response.body() as Assignables).items
+        } else {
+            thisLogger().debug("Request failed: ${response.bodyAsText()}")
+            throw ClientRequestException(response, "Request failed with status ${response.status}")
+        }
     }
 
     fun getAccessToken() = TargetProcessSettingsState.instance.state.targetProcessAccessToken
@@ -71,7 +93,9 @@ class TargetProcessProjectService(override val project: Project) : ProjectContex
 sealed class AssignablesState {
     object Loading : AssignablesState()
     data class Success(val items: List<Assignables.Item>) : AssignablesState()
-    data class Error(val error: Throwable) : AssignablesState()
+    object InvalidHostname : AssignablesState()
+    object InvalidToken : AssignablesState()
+    data class NetworkError(val error: Throwable) : AssignablesState() // Include the exception for logging
     object MissingHostname: AssignablesState()
     object MissingAccessToken: AssignablesState()
 }

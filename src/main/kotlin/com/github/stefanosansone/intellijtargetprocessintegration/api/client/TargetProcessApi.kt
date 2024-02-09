@@ -1,7 +1,7 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.api.client
 
-import com.github.stefanosansone.intellijtargetprocessintegration.api.model.Assignables
+import io.ktor.client.statement.*
 
 interface TargetProcessApi {
-    suspend fun getAssignables(): Assignables
+    suspend fun getAssignables(): HttpResponse
 }

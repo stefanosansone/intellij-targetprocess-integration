@@ -4,6 +4,12 @@
 
 ## [Unreleased]
 
+## [0.4.0] - 2024-02-00
+
+### Fixed
+
+- Fix ToolWindow error messages
+
 ## [0.3.0] - 2024-02-08
 
 ### Fixed
