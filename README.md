@@ -8,7 +8,7 @@
 
 ## Overview
 <!-- Plugin description -->
-This plugin integrates [TargetProcess][targetprocess], into your JetBrains IDE, offering developers a streamlined workflow that enhances productivity and focus. With this integration, you can effortlessly view, manage, and track your TargetProcess tasks and activities directly within your IDE, eliminating the need to switch between applications and disrupt your development flow.
+This plugin integrates TargetProcess, into your JetBrains IDE, offering developers a streamlined workflow that enhances productivity and focus. With this integration, you can effortlessly view, manage, and track your TargetProcess tasks and activities directly within your IDE, eliminating the need to switch between applications and disrupt your development flow.
 <!-- Plugin description end -->
 
 ## Installation
@@ -48,4 +48,3 @@ and uses the [IntelliJ Platform UI Guidelines][ui].
 
 [template]: https://github.com/JetBrains/intellij-platform-plugin-template
 [ui]: https://jetbrains.github.io/ui/
-[targetprocess]: https://www.apptio.com/products/targetprocess/
