@@ -1,7 +1,7 @@
 [versions]
 # libraries
 annotations = "25.0.0"
-ktor = "2.3.12"
+ktor = "3.0.0"
 markdown = "0.7.3"
 marketplaceZipSigner = "0.1.29"
 datetime = "0.6.1"
