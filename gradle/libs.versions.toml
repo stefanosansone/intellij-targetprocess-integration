@@ -12,7 +12,7 @@ changelog = "2.2.1"
 gradleIntelliJPlugin = "1.17.4"
 qodana = "0.1.13"
 kover = "0.9.1"
-serialization = "2.1.0"
+serialization = "2.1.20"
 
 [libraries]
 annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
