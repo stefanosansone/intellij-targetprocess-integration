@@ -1,18 +1,18 @@
 [versions]
 # libraries
-annotations = "26.0.1"
 ktor = "3.1.0"
+annotations = "26.0.2"
 markdown = "0.7.3"
 marketplaceZipSigner = "0.1.29"
-datetime = "0.6.1"
+datetime = "0.6.2"
 
 # plugins
-kotlin = "2.1.0"
+kotlin = "2.1.20"
 changelog = "2.2.1"
 gradleIntelliJPlugin = "1.17.4"
 qodana = "0.1.13"
 kover = "0.9.1"
-serialization = "2.1.0"
+serialization = "2.1.20"
 
 [libraries]
 annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
