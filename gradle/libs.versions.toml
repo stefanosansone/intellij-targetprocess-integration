@@ -4,7 +4,7 @@ ktor = "3.1.0"
 annotations = "26.0.2"
 markdown = "0.7.3"
 marketplaceZipSigner = "0.1.38"
-datetime = "0.6.2"
+datetime = "0.7.0-0.6.x-compat"
 
 # plugins
 kotlin = "2.1.21"
