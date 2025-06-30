@@ -19,6 +19,8 @@
 
         <applicationService
                 serviceImplementation="com.github.stefanosansone.intellijtargetprocessintegration.ui.settings.TargetProcessSettingsState"/>
+        <applicationService
+                serviceImplementation="com.github.stefanosansone.intellijtargetprocessintegration.ui.settings.BranchFoldersState"/>
 
         <iconMapper mappingFile="TargetProcessIconMappings.json"/>
         <toolWindow
@@ -31,7 +33,7 @@
 
     <applicationListeners>
         <listener
-                class="com.github.stefanosansone.intellijtargetprocessintegration.listeners.MyApplicationActivationListener"
+                class="com.github.stefanosansone.intellijtargetprocessintegration.listeners.TPIActivationListener"
                 topic="com.intellij.openapi.application.ApplicationActivationListener"/>
     </applicationListeners>
 
@@ -39,12 +41,16 @@
         <action
                 id="ShowTargetProcessSettings"
                 class="com.github.stefanosansone.intellijtargetprocessintegration.actions.TargetProcessSettingsAction"
-                text="TargetProcess Settings"
-                description="TargetProcess integration settings">
+        >
             <add-to-group group-id="ToolsMenu" anchor="first"/>
         </action>
 
         <group id="TPIntegration.ActionGroup" popup="false">
+            <action id="OpenInBrowserAction"
+                    class="com.github.stefanosansone.intellijtargetprocessintegration.actions.OpenInBrowserAction"/>
+            <action id="CreateBranchAction"
+                    class="com.github.stefanosansone.intellijtargetprocessintegration.actions.CreateBranchAction"/>
+            <separator/>
             <action id="ReloadAssignablesAction"
                     class="com.github.stefanosansone.intellijtargetprocessintegration.actions.ReloadAssignablesAction"
                     use-shortcut-of="Refresh"/>

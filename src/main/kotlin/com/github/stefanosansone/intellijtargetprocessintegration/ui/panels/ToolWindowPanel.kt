@@ -1,6 +1,8 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.ui.panels
 
 import com.github.stefanosansone.intellijtargetprocessintegration.api.model.Assignables
+import com.github.stefanosansone.intellijtargetprocessintegration.utils.TargetProcessProjectService
+import com.intellij.openapi.project.Project
 import com.intellij.ui.render.RenderingUtil
 import com.intellij.ui.treeStructure.Tree
 import com.intellij.util.ui.tree.TreeUtil
@@ -8,7 +10,7 @@ import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
 import javax.swing.tree.TreeSelectionModel
 
-fun getAssignablesList(assignables: List<Assignables.Item>, showDetails: (Assignables.Item) -> Unit): Tree {
+fun getAssignablesList(assignables: List<Assignables.Item>, showDetails: (Assignables.Item) -> Unit, project: Project? = null): Tree {
     val root = DefaultMutableTreeNode()
     val states = assignables.sortedBy { it.entityState.numericPriority }.map { it.entityState.name }.distinct()
 
@@ -33,7 +35,10 @@ fun getAssignablesList(assignables: List<Assignables.Item>, showDetails: (Assign
             selectedNode?.let { node ->
                 val item = assignables.first { it.name == node.userObject.toString() }
                 showDetails(item)
+                project?.TargetProcessProjectService?.setSelectedAssignable(item)
             }
+        } else {
+            project?.TargetProcessProjectService?.setSelectedAssignable(null)
         }
     }
     TreeUtil.installActions(tree)

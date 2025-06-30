@@ -102,7 +102,7 @@ class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
     private fun displayAssignables(toolWindow: ToolWindow, assignables: List<Assignables.Item>) {
         toolWindow.contentManager.addContent(
             ContentFactory.getInstance().createContent(
-                TargetProcessToolWindow(assignables).getContent(), "My Items", false
+                TargetProcessToolWindow(assignables, toolWindow.project).getContent(), "My Items", false
             )
         )
     }
@@ -111,11 +111,11 @@ class TargetProcessToolWindowFactory : ToolWindowFactory, DumbAware {
 }
 
 
-class TargetProcessToolWindow(assignables: List<Assignables.Item>) {
+class TargetProcessToolWindow(assignables: List<Assignables.Item>, project: Project) {
 
-    private val listPanel = JBScrollPane(getAssignablesList(assignables) { item ->
+    private val listPanel = JBScrollPane(getAssignablesList(assignables, { item ->
         showItemDetails(item)
-    }).apply {
+    }, project)).apply {
         val line: Border = CustomLineBorder(OnePixelDivider.BACKGROUND, 0, 1, 0, 0)
         border = CompoundBorder(line, empty())
     }

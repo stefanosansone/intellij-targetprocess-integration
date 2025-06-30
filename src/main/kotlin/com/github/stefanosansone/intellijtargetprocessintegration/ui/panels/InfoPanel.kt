@@ -21,26 +21,35 @@ class InfoPanel(assignable: Assignables.Item) : JBScrollPane() {
 }
 fun getInfoPanel(assignable: Assignables.Item) = panel {
     indent {
+        row("Id:") {
+            label(assignable.id.toString())
+        }
         row("Type:") {
             label(assignable.resourceType)
         }
         row("Project:") {
             label(assignable.project.name)
         }
-        row("Feature:") {
-            label(assignable.feature?.name ?: "")
+        assignable.feature?.name.takeIf { !it.isNullOrEmpty() }?.let {
+            row("Feature:") {
+                label(it)
+            }
         }
         row("Creator:") {
             label(assignable.creator.fullName)
         }
-        row("Team Iteration:") {
-            label(assignable.teamIteration?.name ?: "")
+        assignable.teamIteration?.name.takeIf { !it.isNullOrEmpty() }?.let {
+            row("Team Iteration:") {
+                label(it)
+            }
         }
         row("Creation date:") {
             label(parseDate(assignable.createDate))
         }
-        row("Tags:") {
-            label(assignable.tags)
+        assignable.tags.takeIf { it.isNotEmpty() }?.let {
+            row("Tags:") {
+                label(it)
+            }
         }
     }
 }
