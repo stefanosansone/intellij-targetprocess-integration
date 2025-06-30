@@ -41,7 +41,7 @@ private class DescriptionPanel : HtmlPanel() {
     }
 
     fun updateDescription(text: String) {
-        description = (if (isMarkdown(text)) markdownToHtml(text) else convertImagesToTextLinks(text))
+        description = if (isMarkdown(text)) markdownToHtml(text) else convertImagesToTextLinks(text)
         update()
     }
 

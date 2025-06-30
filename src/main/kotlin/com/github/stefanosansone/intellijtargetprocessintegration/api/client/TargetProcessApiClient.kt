@@ -54,7 +54,7 @@ class TargetProcessApiClient: TargetProcessApi {
     override suspend fun getAssignables(): HttpResponse {
         return client.get {
             url("$API_PATH/Assignables/")
-            parameter("select","{ResourceType,Name,Id,EntityState,Effort,Tags,AssignedUser,Description,Project, Feature,Creator,Release,Iteration,TeamIteration,CreateDate}")
+            parameter("select","{ResourceType,Name,Id,EntityState,Effort,Tags,AssignedUser,Description,Project,Feature,Creator,Release,Iteration,TeamIteration,CreateDate}")
             parameter("take","1000")
             parameter("filter","?AssignedUser.Where(it is Me)")
         }

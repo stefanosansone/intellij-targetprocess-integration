@@ -7,8 +7,8 @@ import com.intellij.openapi.options.ShowSettingsUtil
 import com.intellij.openapi.project.DumbAwareAction
 
 class ShowPluginSettingsAction : DumbAwareAction(
-    "Open TargetProcess Integration Settings",
-    null,
+    "Settings",
+    "Open TargetProcess integration settings",
     AllIcons.General.Settings
 ) {
     override fun actionPerformed(event: AnActionEvent) {

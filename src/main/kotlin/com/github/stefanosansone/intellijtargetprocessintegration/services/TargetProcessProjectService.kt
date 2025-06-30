@@ -27,6 +27,9 @@ class TargetProcessProjectService(override val project: Project) : ProjectContex
     private val _assignablesStateFlow = MutableStateFlow<AssignablesState>(AssignablesState.Loading)
     val assignablesStateFlow: StateFlow<AssignablesState> = _assignablesStateFlow.asStateFlow()
 
+    private val _selectedAssignableFlow = MutableStateFlow<Assignables.Item?>(null)
+    val selectedAssignableFlow: StateFlow<Assignables.Item?> = _selectedAssignableFlow.asStateFlow()
+
     private val client = TargetProcessApiClient()
 
     init {
@@ -58,7 +61,7 @@ class TargetProcessProjectService(override val project: Project) : ProjectContex
                     _assignablesStateFlow.value = AssignablesState.NetworkError(e)
                 }
                 thisLogger().warn("getAssignables: ClientRequestException", e)
-            } catch (e: UnresolvedAddressException) {
+            } catch (_: UnresolvedAddressException) {
                 _assignablesStateFlow.value = AssignablesState.InvalidHostname
             } catch (e: Exception) {
                 _assignablesStateFlow.value = AssignablesState.NetworkError(e)
@@ -84,6 +87,10 @@ class TargetProcessProjectService(override val project: Project) : ProjectContex
     }
 
     fun getAccessToken() = TargetProcessSettingsState.instance.state.targetProcessAccessToken
+
+    fun setSelectedAssignable(item: Assignables.Item?) {
+        _selectedAssignableFlow.value = item
+    }
 
     override fun dispose() {
         coroutineScope.cancel()
