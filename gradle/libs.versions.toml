@@ -7,7 +7,7 @@ marketplaceZipSigner = "0.1.38"
 datetime = "0.7.0-0.6.x-compat"
 
 # plugins
-kotlin = "2.2.0"
+kotlin = "2.2.20"
 changelog = "2.2.1"
 gradleIntelliJPlugin = "1.17.4"
 qodana = "0.1.13"
