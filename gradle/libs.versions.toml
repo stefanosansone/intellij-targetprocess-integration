@@ -2,11 +2,11 @@
 # libraries
 ktor = "3.2.3"
 markdown = "0.7.3"
-marketplaceZipSigner = "0.1.38"
+marketplaceZipSigner = "0.1.43"
 datetime = "0.7.1-0.6.x-compat"
 
 # plugins
-kotlin = "2.2.0"
+kotlin = "2.2.21"
 changelog = "2.4.0"
 gradleIntelliJPlugin = "2.10.4"
 qodana = "0.1.13"
