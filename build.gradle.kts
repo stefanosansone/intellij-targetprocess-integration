@@ -1,5 +1,6 @@
 import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 
 fun properties(key: String) = providers.gradleProperty(key)
 fun environment(key: String) = providers.environmentVariable(key)
@@ -22,12 +23,21 @@ configurations.all {
 group = properties("pluginGroup").get()
 version = properties("pluginVersion").get()
 
-
 repositories {
     mavenCentral()
+    intellijPlatform {
+        defaultRepositories()
+    }
 }
 
 dependencies {
+    intellijPlatform {
+        intellijIdea("2025.2.5")
+
+        bundledPlugin("com.intellij.java")
+
+        testFramework(TestFrameworkType.Platform)
+    }
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.logging)
@@ -44,13 +54,18 @@ kotlin {
     jvmToolchain(17)
 }
 
-intellij {
-    pluginName = properties("pluginName")
-    version = properties("platformVersion")
-    type = properties("platformType")
+intellijPlatform {
+    pluginConfiguration {
+        name = properties("pluginName")
+    }
+    pluginVerification {
+        ides {
+            create(properties("platformType"), properties("platformVersion"))
+        }
+    }
 
     // Plugin Dependencies. Uses `platformPlugins` property from the gradle.properties file.
-    plugins = properties("platformPlugins").map { it.split(',').map(String::trim).filter(String::isNotEmpty) }
+    //plugins = properties("platformPlugins").map { it.split(',').map(String::trim).filter(String::isNotEmpty) }
 }
 
 changelog {
@@ -116,12 +131,12 @@ tasks {
 
     // Configure UI tests plugin
     // Read more: https://github.com/JetBrains/intellij-ui-test-robot
-    runIdeForUiTests {
+/*    runIdeForUiTests {
         systemProperty("robot-server.port", "8082")
         systemProperty("ide.mac.message.dialogs.as.sheets", "false")
         systemProperty("jb.privacy.policy.text", "<!--999.999-->")
         systemProperty("jb.consents.confirmation.enabled", "false")
-    }
+    }*/
 
     signPlugin {
         certificateChain = environment("CERTIFICATE_CHAIN")
