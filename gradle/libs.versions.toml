@@ -1,7 +1,6 @@
 [versions]
 # libraries
 ktor = "3.2.3"
-annotations = "26.0.2"
 markdown = "0.7.3"
 marketplaceZipSigner = "0.1.43"
 datetime = "0.7.1-0.6.x-compat"
@@ -9,13 +8,12 @@ datetime = "0.7.1-0.6.x-compat"
 # plugins
 kotlin = "2.2.21"
 changelog = "2.4.0"
-gradleIntelliJPlugin = "1.17.4"
+gradleIntelliJPlugin = "2.10.4"
 qodana = "0.1.13"
 kover = "0.9.1"
-serialization = "2.2.0"
+serialization = "2.2.21"
 
 [libraries]
-annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
 ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
 ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
 ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
@@ -29,7 +27,7 @@ kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime",
 
 [plugins]
 changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
-gradleIntelliJPlugin = { id = "org.jetbrains.intellij", version.ref = "gradleIntelliJPlugin" }
+gradleIntelliJPlugin = { id = "org.jetbrains.intellij.platform", version.ref = "gradleIntelliJPlugin" }
 kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
 qodana = { id = "org.jetbrains.qodana", version.ref = "qodana" }

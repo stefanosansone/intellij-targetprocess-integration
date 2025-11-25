@@ -1,6 +1,5 @@
 package com.github.stefanosansone.intellijtargetprocessintegration.ui.panels
 
-import ai.grazie.utils.capitalize
 import com.github.stefanosansone.intellijtargetprocessintegration.api.model.Assignables
 import com.intellij.ui.components.JBScrollPane
 import com.intellij.ui.dsl.builder.panel
@@ -8,6 +7,7 @@ import com.intellij.util.ui.JBUI
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import java.util.Locale.getDefault
 
 class InfoPanel(assignable: Assignables.Item) : JBScrollPane() {
 
@@ -65,7 +65,8 @@ fun parseDate(dateString: String): String {
         val localDateTime = instant.toLocalDateTime(timezone)
 
         val day = localDateTime.date.dayOfMonth.toString().padStart(2, '0')
-        val month = localDateTime.date.month.name.substring(0, 3).lowercase().capitalize()
+        val month = localDateTime.date.month.name.substring(0, 3).lowercase()
+            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(getDefault()) else it.toString() }
         val year = localDateTime.date.year.toString()
 
         return "$day-$month-$year"
